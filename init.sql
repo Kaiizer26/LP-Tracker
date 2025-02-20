@@ -1,3 +1,11 @@
+CREATE TABLE users (
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
 CREATE TABLE summoners (
     summoner_id SERIAL PRIMARY KEY,
     summoner_name VARCHAR(255) UNIQUE NOT NULL,
@@ -6,8 +14,8 @@ CREATE TABLE summoners (
     profile_icon_id VARCHAR(255) NOT NULL,
     summoner_level INT NOT NULL,
     ranked_division VARCHAR(50) NOT NULL,
-    lp INT NOT NULL
-);
+    lp INT NOT NULL,
+    );
 
 CREATE TABLE champion (
     champion_id SERIAL PRIMARY KEY,
@@ -141,3 +149,5 @@ CREATE INDEX idx_matches_champion_id ON matches(champion_id);
 CREATE INDEX idx_match_participant_match_id ON match_participant(match_id);
 CREATE INDEX idx_match_participant_summoner_id ON match_participant(summoner_id);
 CREATE INDEX idx_match_participant_champion_id ON match_participant(champion_id);
+
+-- Ajout de contraintes pour améliorer la cohérence des données
