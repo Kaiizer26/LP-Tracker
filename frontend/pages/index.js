@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import '/src/app/globals.css';
 import Head from 'next/head';
 
@@ -5,7 +6,7 @@ export default function Home() {
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       <Head>
-        <title>U.GG Clone</title>
+        <title>LP.Tracker</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
@@ -13,9 +14,11 @@ export default function Home() {
       <nav className="flex justify-between items-center p-6 bg-transparent fixed w-full top-0 z-50">
         <div className="text-2xl font-bold">LP-TRACKER</div>
         <div>
-          <button className="bg-red-500 px-4 py-2 rounded-lg">Téléchargez</button>
+          <Link href="/register">
+          <button className="bg-red-500 px-4 py-2 rounded-lg">S'inscrire</button>
+          </Link>
           <button className="bg-blue-600 px-4 py-2 rounded-lg ml-2">Se connecter</button>
-        </div>
+        </div>  
       </nav>
 
       {/* Hero Section */}
