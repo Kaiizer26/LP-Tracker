@@ -4,7 +4,7 @@ const User = require('../models/user');
 const router = express.Router();
 
 // GET user by summoner name
-router.get('/users/summoner/:name', async (req, res) => {
+router.get('/:name', async (req, res) => {
     try {
         const user = await User.getUserBySummonerName(req.params.name);
         user ? res.status(200).json(user) : res.status(404).json({ message: "User not found" });
@@ -98,6 +98,15 @@ router.get('/users/:id/icon', async (req, res) => {
     try {
         const icon = await User.getUserIcon(req.params.id);
         res.status(200).json(icon);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.post('/create', async (req, res) => {
+    try {
+        const newSummoner = await User.createSummoner(req.body);
+        res.status(201).json(newSummoner);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

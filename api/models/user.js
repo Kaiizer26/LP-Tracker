@@ -11,7 +11,7 @@ const pool = new Pool({
 
 class User {
     static async getUserBySummonerName(summonerName) {
-        const result = await pool.query('SELECT * FROM users WHERE summoner_name = $1', [summonerName]);
+        const result = await pool.query('SELECT * FROM summoners WHERE summoner_name = $1', [summonerName]);
         return result.rows[0];
     }
 
@@ -51,14 +51,23 @@ class User {
     }
 
     static async getUserLevel(summonerId) {
-        const result = await pool.query('SELECT level FROM users WHERE id = $1', [summonerId]);
+        const result = await pool.query('SELECT level FROM summoners WHERE id = $1', [summonerId]);
         return result.rows[0];
     }
 
     static async getUserIcon(summonerId) {
-        const result = await pool.query('SELECT profile_icon FROM users WHERE id = $1', [summonerId]);
+        const result = await pool.query('SELECT profile_icon FROM summoners WHERE id = $1', [summonerId]);
         return result.rows[0];
     }
+
+    static async createSummoner({ summonerName, region, summoner_level, profile_icon_id, puuid, ranked_division, lp }) {
+        const result = await pool.query(
+            'INSERT INTO summoners (summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [summonerName, region, summoner_level, profile_icon_id, puuid, ranked_division, lp]
+        );
+        return result.rows[0];
+    }
+
 }
 
 module.exports = User;
