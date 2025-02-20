@@ -17,7 +17,10 @@ export default function Home() {
           <Link href="/register">
           <button className="bg-red-500 px-4 py-2 rounded-lg">S'inscrire</button>
           </Link>
+
+          <Link href="/login">
           <button className="bg-blue-600 px-4 py-2 rounded-lg ml-2">Se connecter</button>
+          </Link>
         </div>  
       </nav>
 
