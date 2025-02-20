@@ -12,7 +12,7 @@ const pool = new Pool ({
 class Match {
     static async getRecentMatchesByUser(userId) {
         const result = await pool.query(
-            'SELECT * FROM matches WHERE user_id = $1 ORDER BY date DESC LIMIT 10',
+            'SELECT * FROM matches WHERE summoner_id = $1 ORDER BY created_at DESC LIMIT 10',
             [userId]
         );
         return result.rows;
@@ -23,14 +23,15 @@ class Match {
         return result.rows[0];
     }
 
-    static async createMatch({ team1, team2, date, score }) {
+    static async createMatch({ summoner_id, champion_id, kills, deaths, assists, match_duration, match_result }) {
         const result = await pool.query(
-            'INSERT INTO matches (team1, team2, date, score) VALUES ($1, $2, $3, $4) RETURNING *',
-            [team1, team2, date, score]
+            'INSERT INTO matches (summoner_id, champion_id, kills, deaths, assists, match_duration, match_result) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [summoner_id, champion_id, kills, deaths, assists, match_duration, match_result]
         );
+        
         return result.rows[0];
     }
-
+    
     static async updateMatch(id, { team1, team2, date, score }) {
         const result = await pool.query(
             'UPDATE matches SET team1 = $1, team2 = $2, date = $3, score = $4 WHERE id = $5 RETURNING *',
