@@ -37,7 +37,7 @@ CREATE TABLE matches (
     match_name VARCHAR(255) NOT NULL,                -- Nom du match ou identifiant
     game_duration INT NOT NULL,                      -- Durée de la partie en secondes (ou autre unité)
     start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,  -- Heure de début
-    end_time TIMESTAMP,                             -- Heure de fin
+    -- end_time TIMESTAMP,                             -- Heure de fin
     result ENUM('Win', 'Loss', 'Draw', 'Remake') NOT NULL,  -- Résultat global de la game
     game_type VARCHAR(50) NOT NULL,                  -- Type de jeu (par exemple : "Normal", "Ranked", etc.)
     winning_team_side ENUM('Blue', 'Red', 'None') NULL, -- Côté gagnant (Blue ou Red, ou "None" pour un match nul)
