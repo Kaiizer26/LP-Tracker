@@ -3,7 +3,23 @@ const Match = require('../models/match');
 
 const router = express.Router();
 // Endpoints for matches
-router.get('/matches/user/:userId', async (req, res) => {
+router.get('/', async (req, res) => {
+    try {
+        const match = await Match.getAllMatches();
+        match ? res.status(200).json(match) : res.status(404).json(match);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+router.get('/matches/:summonerId', async (req, res) => {
+    try {
+        const match = await Match.getRecentMatchesBySummonerId(req.params.summonerId);
+        match ? res.status(200).json(match) : res.status(404).json(match);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+router.get('/matches/user/:summonerId', async (req, res) => {
     try {
         const matches = await Match.getRecentMatchesBySummonerId(req.params.summonerId);
         res.status(200).json(matches);
@@ -15,7 +31,7 @@ router.get('/matches/user/:userId', async (req, res) => {
 router.get('/matches/:match_id', async (req, res) => {
     try {
         const match = await Match.getMatchById(req.params.match_id);
-        match ? res.status(200).json(match) : res.status(404).json({ message: "Not found" });
+        match ? res.status(200).json(match) : res.status(404).json(match);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

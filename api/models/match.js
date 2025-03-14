@@ -26,12 +26,20 @@ class Match {
     //     return result.rows;
     // }
 
-    static async getMatchById(participant_id) {
-        const result = await pool.query('SELECT * FROM matches WHERE id = $1', [participant_id]);
+    static async getAllMatches() {
+        const result = await pool.query('SELECT * FROM matches');
+        return result.rows;
+    }
+    static async getRecentMatchesBySummonerId(summoner_id) {
+        const result = await pool.query('SELECT * FROM matches WHERE summoner_id = $1', [summoner_id]);
+        return result.rows;
+    }
+    static async getMatchById(match_id) {
+        const result = await pool.query('SELECT * FROM matches WHERE match_id = $1', [match_id]);
         return result.rows[0];
     }
     static async getMatchParticipantById(participant_id) {
-        const result = await pool.query('SELECT * FROM match_participants WHERE id = $1', [participant_id]);
+        const result = await pool.query('SELECT * FROM match_participants WHERE participant_id = $1', [participant_id]);
         return result.rows[0];
     }
 
