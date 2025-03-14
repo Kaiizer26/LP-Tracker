@@ -10,38 +10,69 @@ const pool = new Pool ({
 })
 
 class Match {
-    static async getRecentMatchesByUser(userId) {
+    static async getRecentMatchesBySummonerId(summonerId) {
         const result = await pool.query(
             'SELECT * FROM matches WHERE summoner_id = $1 ORDER BY created_at DESC LIMIT 10',
-            [userId]
+            [summonerId]
         );
         return result.rows;
     }
+
+    // static async getRecentMatchesBySummonerName(summonerName) {
+    //     const result = await pool.query(
+    //         'SELECT * FROM matches WHERE summoner_name = $1 ORDER BY created_at DESC LIMIT 10',
+    //         [summonerName]
+    //     );
+    //     return result.rows;
+    // }
 
     static async getMatchById(id) {
         const result = await pool.query('SELECT * FROM matches WHERE id = $1', [id]);
         return result.rows[0];
     }
+    static async getMatchParticipantById(participant_id) {
+        const result = await pool.query('SELECT * FROM match_participants WHERE id = $1', [participant_id]);
+        return result.rows[0];
+    }
 
-    static async createMatch({ summoner_id, champion_id, kills, deaths, assists, match_duration, match_result }) {
+    static async createMatch({ match_name, game_duration, start_time, end_time, result, game_type, winning_team_side }) {
+        const results = await pool.query(
+            'INSERT INTO matches (match_name, game_duration, start_time, end_time, result, game_type, winning_team_side) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [match_name, game_duration, start_time, end_time, result, game_type, winning_team_side]
+        );
+        
+        return results.rows[0];
+    }
+
+    static async createMatchParticipant({ match_id, summoner_id, team_id, kills, deaths, assists, gold_earned, role }) {
         const result = await pool.query(
-            'INSERT INTO matches (summoner_id, champion_id, kills, deaths, assists, match_duration, match_result) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [summoner_id, champion_id, kills, deaths, assists, match_duration, match_result]
+            'INSERT INTO matches (match_id, summoner_id, team_id, kills, deaths, assists, gold_earned, role) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+            [match_id, summoner_id, team_id, kills, deaths, assists, gold_earned, role]
         );
         
         return result.rows[0];
     }
     
-    static async updateMatch(id, { team1, team2, date, score }) {
+    static async updateMatch(id, { match_name, game_duration, start_time, end_time, result, game_type, winning_team_side }) {
+        const results = await pool.query(
+            'UPDATE matches SET match_name = $1, game_duration = $2, start_time = $3, end_time = $4, result = $5, game_type = $6, winning_team_side = $7 WHERE id = $8 RETURNING *',
+            [match_name, game_duration, start_time, end_time, result, game_type, winning_team_side, id]
+        );
+        return results.rows[0];
+    }
+    static async updateMatchParticipant(participant_id, { match_id, summoner_id, team_id, kills, deaths, assists, gold_earned, role }) {
         const result = await pool.query(
-            'UPDATE matches SET team1 = $1, team2 = $2, date = $3, score = $4 WHERE id = $5 RETURNING *',
-            [team1, team2, date, score, id]
+            'UPDATE match_participants SET match_id = $1, summoner_id = $2, team_id = $3, kills = $4, deaths = $5, assists = $6, gold_earned = $7, role = $8 WHERE id = $9 RETURNING *',
+            [match_id, summoner_id, team_id, kills, deaths, assists, gold_earned, role, participant_id]
         );
         return result.rows[0];
     }
 
     static async deleteMatch(id) {
         await pool.query('DELETE FROM matches WHERE id = $1', [id]);
+    }
+    static async deleteMatchParticipant(participant_id) {
+        await pool.query('DELETE FROM match_participants WHERE participant_id = $1', [participant_id]);
     }
 }
 
