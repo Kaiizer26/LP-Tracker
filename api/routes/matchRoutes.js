@@ -12,9 +12,9 @@ router.get('/matches/user/:userId', async (req, res) => {
     }
 });
 
-router.get('/matches/:id', async (req, res) => {
+router.get('/matches/:match_id', async (req, res) => {
     try {
-        const match = await Match.getMatchById(req.params.id);
+        const match = await Match.getMatchById(req.params.match_id);
         match ? res.status(200).json(match) : res.status(404).json({ message: "Not found" });
     } catch (error) {
         res.status(500).json({ error: error.message });

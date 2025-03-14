@@ -26,8 +26,8 @@ class Match {
     //     return result.rows;
     // }
 
-    static async getMatchById(id) {
-        const result = await pool.query('SELECT * FROM matches WHERE id = $1', [id]);
+    static async getMatchById(participant_id) {
+        const result = await pool.query('SELECT * FROM matches WHERE id = $1', [participant_id]);
         return result.rows[0];
     }
     static async getMatchParticipantById(participant_id) {
@@ -35,10 +35,10 @@ class Match {
         return result.rows[0];
     }
 
-    static async createMatch({ match_name, game_duration, start_time, end_time, result, game_type, winning_team_side }) {
+    static async createMatch({ match_name, game_duration, start_time, result, game_type, winning_team_side }) {
         const results = await pool.query(
-            'INSERT INTO matches (match_name, game_duration, start_time, end_time, result, game_type, winning_team_side) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [match_name, game_duration, start_time, end_time, result, game_type, winning_team_side]
+            'INSERT INTO matches (match_name, game_duration, start_time, result, game_type, winning_team_side) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [match_name, game_duration, start_time, result, game_type, winning_team_side]
         );
         
         return results.rows[0];
