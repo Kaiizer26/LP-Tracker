@@ -46,7 +46,7 @@ CREATE TABLE matches (
 );
 
 -- Table des participants aux matchs
-REATE TABLE match_participants (
+CREATE TABLE match_participants (
     participant_id SERIAL PRIMARY KEY,
     match_id BIGINT NOT NULL,
     summoner_id INT NOT NULL,          -- Lien vers le joueur (summoner)
@@ -61,6 +61,7 @@ REATE TABLE match_participants (
     FOREIGN KEY (team_id) REFERENCES teams(team_id) ON DELETE CASCADE
 );
 
+-- Table des équipes
 CREATE TABLE teams (
     team_id SERIAL PRIMARY KEY,
     match_id BIGINT NOT NULL,
@@ -136,6 +137,7 @@ CREATE TABLE spell (
     FOREIGN KEY (champion_id) REFERENCES champion(champion_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- Table des amis (friends)
 CREATE TABLE friends (
     user_id1 INT NOT NULL,
     user_id2 INT NOT NULL,
@@ -146,26 +148,10 @@ CREATE TABLE friends (
     FOREIGN KEY (user_id2) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- CREATE TABLE match_history (
---     history_id SERIAL PRIMARY KEY,
---     match_id BIGINT NOT NULL,
---     summoner_id INT NOT NULL,
---     champion_id INT NOT NULL,
---     kills INT NOT NULL,
---     deaths INT NOT NULL,
---     assists INT NOT NULL,
---     match_duration INT NOT NULL,
---     match_result VARCHAR(10) NOT NULL CHECK (match_result IN ('Win', 'Loss', 'Remake', 'Draw')),
---     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
---     FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE,
---     FOREIGN KEY (summoner_id) REFERENCES summoners(summoner_id) ON DELETE CASCADE,
---     FOREIGN KEY (champion_id) REFERENCES champion(champion_id) ON DELETE CASCADE
--- );
-
--- Index pour améliorer les performances
+-- Création des index pour améliorer les performances
 CREATE INDEX idx_summoners_puuid ON summoners(puuid);
-CREATE INDEX idx_matches_summoner_id ON matches(summoner_id);
-CREATE INDEX idx_matches_champion_id ON matches(champion_id);
-CREATE INDEX idx_match_participant_match_id ON match_participant(match_id);
-CREATE INDEX idx_match_participant_summoner_id ON match_participant(summoner_id);
-CREATE INDEX idx_match_participant_champion_id ON match_participant(champion_id);
+CREATE INDEX idx_matches_summoner_id ON matches(match_id);
+CREATE INDEX idx_matches_champion_id ON matches(match_id);
+CREATE INDEX idx_match_participant_match_id ON match_participants(match_id);
+CREATE INDEX idx_match_participant_summoner_id ON match_participants(summoner_id);
+CREATE INDEX idx_match_participant_champion_id ON match_participants(summoner_id);
