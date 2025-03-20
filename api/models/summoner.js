@@ -10,18 +10,28 @@ const pool = new Pool({
 });
 
 class Summoner {
-    // static async getUserBySummonerName(summonerName) {
-    //     const result = await pool.query('SELECT * FROM summoners WHERE summoner_name = $1', [summonerName]);
-    //     return result.rows[0];
-    // }
 
-     static async getUserBySummonerName(summonerName) {
+     static async getAllSummoners() {
+        const result = await pool.query('SELECT * FROM summoners');
+        return result.rows;
+    }
+     static async getSummonerBySummonerName(summonerName) {
         const result = await pool.query('SELECT * FROM summoners WHERE summoner_name = $1', [summonerName]);
         return result.rows[0];
     }
+     static async getSummonerById(summonerId) {
+        const result = await pool.query('SELECT * FROM summoners WHERE summoner_id = $1', [summonerId]);
+        return result.rows[0];
+    }
 
+    // à modifier/attendre car pas de model stats encore
     static async getRankedStats(summonerId) {
-        const result = await pool.query('SELECT * FROM ranked_stats WHERE summoner_id = $1', [summonerId]);
+        const result = await pool.query('SELECT * FROM stats WHERE summoner_id = $1', [summonerId]);
+        return result.rows[0];
+    }
+    // en attendant
+    static async getRankedStats(summonerId) {
+        const result = await pool.query('SELECT ranked_division, lp FROM summoners WHERE summoner_id = $1', [summonerId]);
         return result.rows[0];
     }
 
@@ -65,10 +75,10 @@ class Summoner {
         return result.rows[0];
     }
 
-    static async createSummoner({ summonerName, region, summoner_level, profile_icon_id, puuid, ranked_division, lp }) {
+    static async createSummoner({ summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp }) {
         const result = await pool.query(
             'INSERT INTO summoners (summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [summonerName, region, summoner_level, profile_icon_id, puuid, ranked_division, lp]
+            [summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp]
         );
         return result.rows[0];
     }
