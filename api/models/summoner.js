@@ -66,12 +66,12 @@ class Summoner {
     }
 
     static async getSummonerLevel(summonerId) {
-        const result = await pool.query('SELECT level FROM summoners WHERE id = $1', [summonerId]);
+        const result = await pool.query('SELECT summoner_level FROM summoners WHERE summoner_id = $1', [summonerId]);
         return result.rows[0];
     }
 
     static async getSummonerIcon(summonerId) {
-        const result = await pool.query('SELECT profile_icon FROM summoners WHERE id = $1', [summonerId]);
+        const result = await pool.query('SELECT profile_icon_id FROM summoners WHERE summoner_id = $1', [summonerId]);
         return result.rows[0];
     }
 
@@ -82,13 +82,13 @@ class Summoner {
         );
         return result.rows[0];
     }
-    static async updateSummoner(summoner_id, { summonerName, region, summoner_level, profile_icon_id, ranked_division, lp }) {
+    static async updateSummoner(summoner_id, { summoner_name, puuid, region, summoner_level, profile_icon_id, ranked_division, lp }) {
         const result = await pool.query(
             `UPDATE summoners 
-             SET summoner_name = $1, region = $2, summoner_level = $3, profile_icon_id = $4, ranked_division = $5, lp = $6 
-             WHERE summoner_id = $7 
+             SET summoner_name = $1, puuid = $2, region = $3, profile_icon_id = $4, summoner_level = $5, ranked_division = $6, lp = $7 
+             WHERE summoner_id = $8 
              RETURNING *`,
-            [summonerName, region, summoner_level, profile_icon_id, ranked_division, lp, summoner_id]
+            [summoner_name, puuid, region, profile_icon_id, summoner_level, ranked_division, lp, summoner_id]
         );
         return result.rows[0];
     }
