@@ -5,6 +5,7 @@ const matchRoutes = require('./routes/matchRoutes');
 const championRoutes = require('./routes/championRoutes');
 const teamRoutes = require('./routes/teamRoutes');
 const statsRoutes = require('./routes/statsRoutes');
+const matchparticipantRoutes = require('./routes/matchparticipantRoutes');
 require('dotenv').config();
 
 const app= express();
@@ -16,6 +17,7 @@ app.use('/matches', matchRoutes);
 app.use('/champion', championRoutes);
 app.use('/teams', teamRoutes);
 app.use('/stats', statsRoutes);
+app.use('/matchparticipant', matchparticipantRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
