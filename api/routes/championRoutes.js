@@ -4,18 +4,10 @@ const Champion = require('../models/champion');
 const router = express.Router();
 
 
-//  POST - Créer un champion
-router.post('/', async (req, res) => {
-    try {
-        const newChampion = await Champion.createChampion(req.body);
-        res.json(newChampion);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+
 
 //  GET - Obtenir la liste complète des champions
-router.get('/champions', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const champions = await Champion.getAllChampions();
         res.json(champions);
@@ -24,7 +16,26 @@ router.get('/champions', async (req, res) => {
     }
 });
 
+router.get('/champion-id/:champion_id', async (req, res) => {
+    try {
+        const champions = await Champion.getChampionById(req.params.champion_id);
+        res.json(champions);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/champion-name/:champion_name', async (req, res) => {
+    try {
+        const champions = await Champion.getChampionByChampionName(req.params.champion_name);
+        res.json(champions);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 //  GET - Obtenir tous les champions joués par un invocateur
+// pas utilisé
 router.get('/summoner/:region/:summonerName', async (req, res) => {
     try {
         const champions = await Champion.getChampionsBySummoner(req.body.region, req.body.summonerName);
@@ -35,6 +46,8 @@ router.get('/summoner/:region/:summonerName', async (req, res) => {
 });
 
 //  GET - Obtenir les statistiques d’un champion spécifique pour un invocateur
+// pas utilisé
+
 router.get('/summoner/:region/:summonerName/:championId', async (req, res) => {
     try {
         const stats = await Champion.getChampionStats(req.params.region, req.params.summonerName, req.params.championId);
@@ -45,6 +58,8 @@ router.get('/summoner/:region/:summonerName/:championId', async (req, res) => {
 });
 
 //  GET - Obtenir le KDA moyen par champion pour un invocateur
+// pas utilisé
+
 router.get('/summoner/:region/:summonerName/kda', async (req, res) => {
     try {
         const kdaStats = await Champion.getChampionKDA(req.params.region, req.params.summonerName);
@@ -55,6 +70,8 @@ router.get('/summoner/:region/:summonerName/kda', async (req, res) => {
 });
 
 //  GET - Obtenir le taux de victoire par champion pour un invocateur
+// pas utilisé
+
 router.get('/summoner/:region/:summonerName/winrate', async (req, res) => {
     try {
         const winrate = await Champion.getChampionWinrate(req.params.region, req.params.summonerName);
@@ -64,10 +81,20 @@ router.get('/summoner/:region/:summonerName/winrate', async (req, res) => {
     }
 });
 
-//  PUT - Mettre à jour un champion (remplace toutes les données)
-router.put('/:id', async (req, res) => {
+//  POST - Créer un champion
+router.post('/', async (req, res) => {
     try {
-        const updatedChampion = await Champion.updateChampion(req.params.id, req.body);
+        const newChampion = await Champion.createChampion(req.body);
+        res.json(newChampion);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+//  PUT - Mettre à jour un champion (remplace toutes les données)
+router.put('/:champion_id', async (req, res) => {
+    try {
+        const updatedChampion = await Champion.updateChampion(req.params.champion_id, req.body);
         res.json(updatedChampion);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -75,18 +102,19 @@ router.put('/:id', async (req, res) => {
 });
 
 //  PATCH - Mettre à jour partiellement un champion
-router.patch('/:id', async (req, res) => {
+router.patch('/:champion_id', async (req, res) => {
     try {
-        const existingChampion = await Champion.getChampionStats(req.body.region, req.body.summonerName, req.params.id);
+        const existingChampion = await Champion.getChampionById(req.params.champion_id);
         if (!existingChampion) {
             return res.status(404).json({ error: "Champion non trouvé" });
         }
 
-        const updatedChampion = await Champion.updateChampion(req.params.id, {
-            championName: req.body.championName || existingChampion.champion_name,
+        // On met à jour uniquement les champs fournis dans req.body
+        const updatedChampion = await Champion.updateChampion(req.params.champion_id, {
+            champion_name: req.body.champion_name || existingChampion.champion_name,
             role: req.body.role || existingChampion.role,
             lore: req.body.lore || existingChampion.lore,
-            championImage: req.body.championImage || existingChampion.champion_image
+            champion_image: req.body.champion_image || existingChampion.champion_image
         });
 
         res.json(updatedChampion);
@@ -96,9 +124,9 @@ router.patch('/:id', async (req, res) => {
 });
 
 //  DELETE - Supprimer un champion
-router.delete('/:id', async (req, res) => {
+router.delete('/:champion_id', async (req, res) => {
     try {
-        const deletedChampion = await Champion.deleteChampion(req.params.id);
+        const deletedChampion = await Champion.deleteChampion(req.params.champion_id);
         res.json(deletedChampion);
     } catch (error) {
         res.status(500).json({ error: error.message });

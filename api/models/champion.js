@@ -10,6 +10,33 @@ const pool = new Pool ({
 })
 class Champion {
     
+    // Obtenir la liste complète des champions disponibles dans le jeu
+    static async getAllChampions() {
+        const result = await pool.query(
+            `SELECT * FROM Champion`
+        );
+        return result.rows;
+    }
+
+    static async getChampionById(champion_id) {
+        const result = await pool.query(
+            `SELECT *
+             FROM Champion
+             WHERE champion_id = $1`,
+            [champion_id]
+        );
+        return result.rows[0];
+    }
+
+    static async getChampionByChampionName(champion_name) {
+        const result = await pool.query(
+            `SELECT *
+             FROM Champion
+             WHERE champion_name = $1`,
+            [champion_name]
+        );
+        return result.rows[0];
+    }
     // Obtenir la liste des champions joués par un invocateur
     static async getChampionsBySummoner(region, summonerName) {
         const result = await pool.query(
@@ -22,6 +49,8 @@ class Champion {
         );
         return result.rows;
     }
+    
+    
 
     // Obtenir les statistiques d’un champion pour un invocateur
     static async getChampionStats(region, summonerName, championId) {
@@ -114,32 +143,26 @@ class Champion {
         return result.rows;
     }
 
-    // Obtenir la liste complète des champions disponibles dans le jeu
-static async getAllChampions() {
-    const result = await pool.query(
-        `SELECT champion_id, champion_name, role, champion_image FROM Champion`
-    );
-    return result.rows;
-}
+
 
     // Création d'un champion
-    static async createChampion({ championName, role, lore, championImage }) {
+    static async createChampion({ champion_name, role, lore, champion_image }) {
         const result = await pool.query(
             `INSERT INTO Champion (champion_name, role, lore, champion_image) 
              VALUES ($1, $2, $3, $4) RETURNING *`,
-            [championName, role, lore, championImage]
+            [champion_name, role, lore, champion_image]
         );
         return result.rows[0];
     }
 
     // Mise à jour d'un champion
-    static async updateChampion(champion_id, { championName, role, lore, championImage }) {
+    static async updateChampion(champion_id, { champion_name, role, lore, champion_image }) {
         const result = await pool.query(
             `UPDATE Champion 
              SET champion_name = $1, role = $2, lore = $3, champion_image = $4, updated_at = CURRENT_TIMESTAMP
              WHERE champion_id = $5 
              RETURNING *`,
-            [championName, role, lore, championImage, champion_id]
+            [champion_name, role, lore, champion_image, champion_id]
         );
         return result.rows[0];
     }
