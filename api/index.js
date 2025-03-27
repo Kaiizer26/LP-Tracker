@@ -1,6 +1,7 @@
 const express = require('express');
 const bookRoutes = require('./routes/bookRoutes');
 const summonerRoutes = require('./routes/summonerRoutes');
+const userRoutes = require('./routes/userRoutes');
 const matchRoutes = require('./routes/matchRoutes');
 const championRoutes = require('./routes/championRoutes');
 const teamRoutes = require('./routes/teamRoutes');
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use('/books', bookRoutes);
 app.use('/summoners', summonerRoutes);
+app.use('/users', userRoutes);
 app.use('/matches', matchRoutes);
 app.use('/champion', championRoutes);
 app.use('/teams', teamRoutes);
