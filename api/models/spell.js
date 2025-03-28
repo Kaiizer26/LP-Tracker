@@ -11,31 +11,31 @@ const pool = new Pool ({
 
 class Spell {
     static async getAllSpells(){
-        const result = await pool.query('SELECT * FROM items');
+        const result = await pool.query('SELECT * FROM spell');
         return result.rows;
     }
 
-    static async getItemById(item_id){
-        const result = await pool.query('SELECT * FROM items WHERE item_id = $1', [item_id])
+    static async getSpellById(spell_id){
+        const result = await pool.query('SELECT * FROM spell WHERE spell_id = $1', [spell_id])
         return result.rows[0]
     }
 
-    static async createItem({item_name, description, price}){
+    static async createSpell({champion_id, spell_name, description, spell_picture, spell_type}){
         const result = await pool.query(
-            'INSERT INTO items (item_name, description, price) VALUES ($1, $2, $3) RETURNING *', [item_name, description, price]
+            'INSERT INTO spell (champion_id, spell_name, description, spell_picture, spell_type) VALUES ($1, $2, $3, $4, $5) RETURNING *', [champion_id, spell_name, description, spell_picture, spell_type]
         )
     return result.rows[0];
     }
 
-    static async updateItem(item_id, {item_name, description, price}){
+    static async updateSpell(spell_id, {champion_id, spell_name, description, spell_picture, spell_type}){
         const result = await pool.query(
-            'UPDATE items SET item_name = $1, description = $2, price = $3 WHERE item_id = $4 RETURNING *', [item_name, description, price, item_id]
+            'UPDATE spell SET champion_id = $1, spell_name = $2, description = $3, spell_picture = $4, spell_type = $5 WHERE spell_id = $6 RETURNING *', [champion_id, spell_name, description, spell_picture, spell_type, spell_id]
         )
     }
 
-    static async deleteItem(item_id){
-        await pool.query('DELETE FROM items WHERE item_id = $1', [item_id]);
+    static async deleteSpell(spell_id){
+        await pool.query('DELETE FROM spell WHERE spell_id = $1', [spell_id]);
     }
 }
 
-module.exports = Item;
+module.exports = Spell;
