@@ -3,7 +3,7 @@ const Rune = require('../models/rune');
 
 const router = express.Router();
 
-// GET all runes
+// GET toutes les runes
 router.get('/', async (req, res) => {
     try {
         const runes = await Rune.getAllRunes();
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET a specific rune by ID
+// GET une specific rune en fonction de l'id
 router.get('/:rune_id', async (req, res) => {
     try {
         const rune = await Rune.getRuneById(req.params.rune_id);
@@ -23,7 +23,7 @@ router.get('/:rune_id', async (req, res) => {
     }
 });
 
-// POST a new rune
+// POST nouvelle rune
 router.post('/', async (req, res) => {
     try {
         const newRune = await Rune.createRune(req.body);
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// PUT to update a rune by ID
+// PUT changer une rune par l'id
 router.put('/:rune_id', async (req, res) => {
     try {
         const updatedRune = await Rune.updateRune(req.params.rune_id, req.body);
@@ -43,7 +43,7 @@ router.put('/:rune_id', async (req, res) => {
     }
 });
 
-// DELETE a rune by ID
+// DELETE une rune
 router.delete('/:rune_id', async (req, res) => {
     try {
         await Rune.deleteRune(req.params.rune_id);
@@ -53,7 +53,7 @@ router.delete('/:rune_id', async (req, res) => {
     }
 });
 
-// PATCH a rune by ID (partially update)
+// PATCH partiellment une rune
 router.patch('/:rune_id', async (req, res) => {
     try {
         const existingRune = await Rune.getRuneById(req.params.rune_id);
