@@ -104,3 +104,23 @@ CREATE TABLE stats (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Date de mise à jour
     FOREIGN KEY (summoner_id) REFERENCES summoners(summoner_id) ON DELETE CASCADE
 );
+
+-- Insérer Irelia (Mid)
+INSERT INTO champion (champion_name, role, lore, champion_image)
+VALUES ('Irelia', 'Mid', 'Irelia est une maîtresse des lames et une combattante redoutable. Son passé tragique l\’a conduite à devenir une guerrière implacable, capable de manipuler les lames flottantes qu\’elle utilise pour détruire ses ennemis.', 'public/img/irelia.png');
+
+-- Insérer Garen (Top)
+INSERT INTO champion (champion_name, role, lore, champion_image)
+VALUES ('Garen', 'Top', 'Garen, le vaillant soldat de Demacia, est un guerrier résolu et implacable. Son sens de l\'honneur et de la justice guide ses actions, et il est prêt à tout pour défendre son pays et ses idéaux.', 'public/img/garen.png');
+
+-- Insérer Jinx (ADC)
+INSERT INTO champion (champion_name, role, lore, champion_image)
+VALUES ('Jinx', 'ADC', 'Jinx, la folle furieuse, est une criminelle excentrique de Zaun. Avec ses armes explosives et sa personnalité déjantée, elle sème le chaos partout où elle passe.', 'public/img/jinx.png');
+
+-- Insérer Lee Sin (Jungle)
+INSERT INTO champion (champion_name, role, lore, champion_image)
+VALUES ('Lee Sin', 'Jungle', 'Lee Sin, le moine aveugle, est un maître des arts martiaux. Malgré sa cécité, il navigue à travers les ténèbres avec une précision mortelle, protégeant ceux qui en ont besoin et cherchant l\'équilibre dans un monde chaotique.', 'public/img/lee_sin.png');
+
+-- Insérer Janna (Support)
+INSERT INTO champion (champion_name, role, lore, champion_image)
+VALUES ('Janna', 'Support', 'Janna, l\'esprit des tempêtes, incarne la puissance de la nature. En tant que protectrice des faibles, elle utilise ses pouvoirs pour aider ses alliés et contrer les menaces qui pèsent sur Runeterra.', 'public/img/janna.png');
