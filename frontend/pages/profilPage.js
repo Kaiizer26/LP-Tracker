@@ -42,7 +42,7 @@ export default function ProfilePage() {
           <Image src="/profile.jpg" alt="Profile" width={64} height={64} className="rounded-full" />
           <div>
             <h1 className="text-xl font-bold">depchai #VTN</h1>
-            <p className="text-sm text-gray-400">Ladder Rank 869,258 (top 42.2%)</p>
+            <p className="text-sm text-gray-400">Ladder Rank 1 (top 0.1%)</p>
           </div>
           <button className="ml-auto bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">Update</button>
         </header>
@@ -51,8 +51,8 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Ranked Solo</h2>
-            <p>Silver 1 - 59 LP</p>
-            <p>16W 11L (59% Win Rate)</p>
+            <p>Challenger - 259 LP</p>
+            <p>16W 2L (59% Win Rate)</p>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Ranked Flex</h2>
