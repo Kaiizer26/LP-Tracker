@@ -10,64 +10,47 @@ const pool = new Pool({
 });
 
 class User {
-    static async getUserBySummonerName(summonerName) {
-        const result = await pool.query('SELECT * FROM summoners WHERE summoner_name = $1', [summonerName]);
-        return result.rows[0];
-    }
 
-    static async getRankedStats(summonerId) {
-        const result = await pool.query('SELECT * FROM ranked_stats WHERE summoner_id = $1', [summonerId]);
-        return result.rows[0];
-    }
-
-    static async getFlexStats(summonerId) {
-        const result = await pool.query('SELECT * FROM flex_stats WHERE summoner_id = $1', [summonerId]);
-        return result.rows[0];
-    }
-
-    static async getNormalStats(summonerId) {
-        const result = await pool.query('SELECT * FROM normal_stats WHERE summoner_id = $1', [summonerId]);
-        return result.rows[0];
-    }
-
-    static async getMastery(summonerId) {
-        const result = await pool.query('SELECT * FROM champion_mastery WHERE summoner_id = $1', [summonerId]);
+     static async getAllUsers() {
+        const result = await pool.query('SELECT * FROM users');
         return result.rows;
     }
-
-    static async getTopMastery(summonerId) {
-        const result = await pool.query('SELECT * FROM champion_mastery WHERE summoner_id = $1 ORDER BY mastery_points DESC LIMIT 3', [summonerId]);
-        return result.rows;
+     static async getUserByUsername(username) {
+        const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+        return result.rows[0];
     }
-
-    static async getChampionMastery(summonerId, championId) {
-        const result = await pool.query('SELECT * FROM champion_mastery WHERE summoner_id = $1 AND champion_id = $2', [summonerId, championId]);
+     static async getUserById(user_id) {
+        const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [user_id]);
         return result.rows[0];
     }
 
-    static async getClashInfo(summonerId) {
-        const result = await pool.query('SELECT * FROM clash_info WHERE summoner_id = $1', [summonerId]);
-        return result.rows[0];
-    }
-
-    static async getUserLevel(summonerId) {
-        const result = await pool.query('SELECT level FROM summoners WHERE id = $1', [summonerId]);
-        return result.rows[0];
-    }
-
-    static async getUserIcon(summonerId) {
-        const result = await pool.query('SELECT profile_icon FROM summoners WHERE id = $1', [summonerId]);
-        return result.rows[0];
-    }
-
-    static async createSummoner({ summonerName, region, summoner_level, profile_icon_id, puuid, ranked_division, lp }) {
+    static async createUser({ username, email, password }) {
         const result = await pool.query(
-            'INSERT INTO summoners (summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [summonerName, region, summoner_level, profile_icon_id, puuid, ranked_division, lp]
+            'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
+            [username, email, password]
+        );
+        return result.rows[0];
+    }
+    static async updateUser(user_id, { username, email, password }) {
+        const result = await pool.query(
+            `UPDATE users 
+             SET username = $1, email = $2, password = $3 
+             WHERE user_id = $4 
+             RETURNING *`,
+            [username, email, password, user_id]
         );
         return result.rows[0];
     }
 
+    // Suppression d'un invocateur
+    static async deleteUser(user_id) {
+        const result = await pool.query(
+            'DELETE FROM users WHERE user_id = $1 RETURNING *',
+            [user_id]
+        );
+        return result.rows[0];
+    }
 }
+
 
 module.exports = User;

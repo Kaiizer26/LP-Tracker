@@ -10,39 +10,49 @@ const pool = new Pool ({
 })
 
 class Match {
-    static async getRecentMatchesByUser(userId) {
+    static async getRecentMatchesBySummonerId(summonerId) {
         const result = await pool.query(
             'SELECT * FROM matches WHERE summoner_id = $1 ORDER BY created_at DESC LIMIT 10',
-            [userId]
+            [summonerId]
         );
         return result.rows;
     }
 
-    static async getMatchById(id) {
-        const result = await pool.query('SELECT * FROM matches WHERE id = $1', [id]);
+
+    static async getAllMatches() {
+        const result = await pool.query('SELECT * FROM matches');
+        return result.rows;
+    }
+    static async getRecentMatchesBySummonerId(summoner_id) {
+        const result = await pool.query('SELECT * FROM matches WHERE summoner_id = $1', [summoner_id]);
+        return result.rows;
+    }
+    static async getMatchById(match_id) {
+        const result = await pool.query('SELECT * FROM matches WHERE match_id = $1', [match_id]);
         return result.rows[0];
     }
 
-    static async createMatch({ summoner_id, champion_id, kills, deaths, assists, match_duration, match_result }) {
-        const result = await pool.query(
-            'INSERT INTO matches (summoner_id, champion_id, kills, deaths, assists, match_duration, match_result) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [summoner_id, champion_id, kills, deaths, assists, match_duration, match_result]
+    static async createMatch({ match_name, game_duration, start_time, result, game_type, winning_team_side }) {
+        const results = await pool.query(
+            'INSERT INTO matches (match_name, game_duration, start_time, result, game_type, winning_team_side) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+            [match_name, game_duration, start_time, result, game_type, winning_team_side]
         );
         
-        return result.rows[0];
-    }
-    
-    static async updateMatch(id, { team1, team2, date, score }) {
-        const result = await pool.query(
-            'UPDATE matches SET team1 = $1, team2 = $2, date = $3, score = $4 WHERE id = $5 RETURNING *',
-            [team1, team2, date, score, id]
-        );
-        return result.rows[0];
+        return results.rows[0];
     }
 
-    static async deleteMatch(id) {
-        await pool.query('DELETE FROM matches WHERE id = $1', [id]);
+    static async updateMatch(match_id, { match_name, game_duration, start_time, end_time, result, game_type, winning_team_side }) {
+        const results = await pool.query(
+            'UPDATE matches SET match_name = $1, game_duration = $2, start_time = $3, end_time = $4, result = $5, game_type = $6, winning_team_side = $7 WHERE match_id = $8 RETURNING *',
+            [match_name, game_duration, start_time, end_time, result, game_type, winning_team_side, match_id]
+        );
+        return results.rows[0];
     }
+
+    static async deleteMatch(match_id) {
+        await pool.query('DELETE FROM matches WHERE match_id = $1', [match_id]);
+    }
+    
 }
 
 module.exports = Match;

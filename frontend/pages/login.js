@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    email: '',
+    email: '', 
     password: ''
   });
 
