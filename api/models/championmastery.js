@@ -10,13 +10,7 @@ const pool = new Pool ({
 })
 
 class ChampionMastery {
-    // static async getRecentMatchesByChampionId(champion_mastery_id) {
-    //     const result = await pool.query(
-    //         'SELECT * FROM champion_mastery WHERE champion_mastery_id = $1 ORDER BY created_at DESC LIMIT 10',
-    //         [champion_mastery_id]
-    //     );
-    //     return result.rows;
-    // }
+    
 
 
     static async getAllChampionsMasteries() {
@@ -27,9 +21,9 @@ class ChampionMastery {
         const result = await pool.query('SELECT * FROM champion_mastery WHERE champion_mastery_id = $1', [champion_mastery_id]);
         return result.rows[0];
     }
-    static async getChampionMasteryBySummonerId(summoner_id) {
+    static async getChampionMasteriesBySummonerId(summoner_id) {
         const result = await pool.query('SELECT * FROM champion_mastery WHERE summoner_id = $1', [summoner_id]);
-        return result.rows[0];
+        return result.rows;
     }
     static async getChampionMasteriesByChampionId(champion_id) {
         const result = await pool.query('SELECT * FROM champion_mastery WHERE champion_id = $1', [champion_id]);
@@ -45,19 +39,19 @@ class ChampionMastery {
         return result.rows[0];
     }
 
-    static async createChampionMastery({ summoner_id, champion_id, mastery_level, master_points}) {
+    static async createChampionMastery({ summoner_id, champion_id, mastery_level, mastery_points}) {
         const results = await pool.query(
-            'INSERT INTO champion_mastery (summoner_id, champion_id, mastery_level, master_points) VALUES ($1, $2, $3, $4) RETURNING *',
-            [summoner_id, champion_id, mastery_level, master_points]
+            'INSERT INTO champion_mastery (summoner_id, champion_id, mastery_level, mastery_points) VALUES ($1, $2, $3, $4) RETURNING *',
+            [summoner_id, champion_id, mastery_level, mastery_points]
         );
         
         return results.rows[0];
     }
 
-    static async updateChampionMastery(champion_mastery_id, { summoner_id, champion_id, mastery_level, master_points }) {
+    static async updateChampionMastery(champion_mastery_id, { summoner_id, champion_id, mastery_level, mastery_points }) {
         const results = await pool.query(
-            'UPDATE champion_mastery SET summoner_id = $1, champion_id = $2, mastery_level = $3, master_points = $4WHERE champion_mastery_id = $8 RETURNING *',
-            [summoner_id, champion_id, mastery_level, master_points, champion_mastery_id]
+            'UPDATE champion_mastery SET summoner_id = $1, champion_id = $2, mastery_level = $3, mastery_points = $4 WHERE champion_mastery_id = $5 RETURNING *',
+            [summoner_id, champion_id, mastery_level, mastery_points, champion_mastery_id]
         );
         return results.rows[0];
     }

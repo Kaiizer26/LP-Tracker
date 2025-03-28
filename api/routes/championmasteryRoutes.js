@@ -11,9 +11,17 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+router.get('/:champion_mastery_id', async (req, res) => {
+    try {
+        const championmastery = await ChampionMastery.getChampionMasteryById(req.params.champion_mastery_id);
+        championmastery ? res.status(200).json(championmastery) : res.status(404).json(championmastery);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 router.get('/summoner/:summoner_id', async (req, res) => {
     try {
-        const championmastery = await ChampionMastery.getChampionMasteryBySummonerId(req.params.summoner_id);
+        const championmastery = await ChampionMastery.getChampionMasteriesBySummonerId(req.params.summoner_id);
         championmastery ? res.status(200).json(championmastery) : res.status(404).json(championmastery);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -23,7 +31,7 @@ router.get('/summoner/:summoner_id', async (req, res) => {
 router.get('/champion/:champion_id', async (req, res) => {
     try {
         const championmastery = await ChampionMastery.getChampionMasteriesByChampionId(req.params.champion_id);
-        championmastery ? res.status(200).json(championmastery) : res.status(404).json(championmastery);
+        championmastery ? res.status(200).json(championmastery) : res.status(404).json({ error: "Stats non trouvée pour ce joueur" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -51,7 +59,7 @@ router.get('/mastery-points/:champion_mastery_id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const newChampionMastery = await ChampionMastery.createMatchParticipant(req.body);
+        const newChampionMastery = await ChampionMastery.createChampionMastery(req.body);
         res.status(201).json(newChampionMastery);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -60,7 +68,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:champion_mastery_id', async (req, res) => {
     try {
-        const updatedChampionMastery = await ChampionMastery.updatedChampionMastery(req.params.champion_mastery_id, req.body);
+        const updatedChampionMastery = await ChampionMastery.updateChampionMastery(req.params.champion_mastery_id, req.body);
         res.status(200).json(updatedChampionMastery);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -70,15 +78,16 @@ router.put('/:champion_mastery_id', async (req, res) => {
 router.patch('/:champion_mastery_id', async (req, res) => {
     try {
         const existingChampionMastery = await ChampionMastery.getChampionMasteryById(req.params.champion_mastery_id);
+        // return res.json(existingChampionMastery);
         if (!existingChampionMastery) {
             return res.status(404).json({ error: "Maîtrise du champion non trouvée" });
         }
 
         // On met à jour uniquement les champs fournis dans req.body
-        const updatedChampionMastery= await ChampionMastery.updatedChampionMastery(req.params.champion_mastery_id, {
+        const updatedChampionMastery= await ChampionMastery.updateChampionMastery(req.params.champion_mastery_id, {
             summoner_id: req.body.summoner_id || existingChampionMastery.summoner_id,
             champion_id: req.body.champion_id || existingChampionMastery.champion_id,
-            master_level: req.body.master_level || existingChampionMastery.master_level,
+            mastery_level: req.body.mastery_level || existingChampionMastery.mastery_level,
             mastery_points: req.body.mastery_points || existingChampionMastery.mastery_points
         });
 
