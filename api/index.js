@@ -5,6 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const matchRoutes = require('./routes/matchRoutes');
 const championRoutes = require('./routes/championRoutes');
 const teamRoutes = require('./routes/teamRoutes');
+const ChampionMasteryRoutes = require('./routes/championmasteryRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const matchparticipantRoutes = require('./routes/matchparticipantRoutes');
 require('dotenv').config();
@@ -18,6 +19,7 @@ app.use('/users', userRoutes);
 app.use('/matches', matchRoutes);
 app.use('/champion', championRoutes);
 app.use('/teams', teamRoutes);
+app.use('/championmastery', ChampionMasteryRoutes);
 app.use('/stats', statsRoutes);
 app.use('/matchparticipant', matchparticipantRoutes);
 
