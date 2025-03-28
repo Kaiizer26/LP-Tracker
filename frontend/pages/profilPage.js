@@ -39,7 +39,7 @@ export default function ProfilePage() {
       <div className="pt-12"> {/* Ajout de padding-top pour éviter que le contenu soit caché derrière la navbar */}
         {/* Header */}
         <header className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg shadow-md">
-          <Image src="/profile.jpg" alt="Profile" width={64} height={64} className="rounded-full" />
+          <Image src="/img/icon/10_Year_Anniversary_Poro_profileicon_old.png" alt="Profile" width={64} height={64} className="rounded-full" />
           <div>
             <h1 className="text-xl font-bold">depchai #VTN</h1>
             <p className="text-sm text-gray-400">Ladder Rank 1 (top 0.1%)</p>
