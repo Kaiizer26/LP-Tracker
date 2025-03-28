@@ -20,16 +20,16 @@ class Spell {
         return result.rows[0]
     }
 
-    static async createSpell({champion_id, spell_name, description, spell_picture, spell_type}){
+    static async createSpell({champion_id, spell_name, description, spell_picture }){
         const result = await pool.query(
-            'INSERT INTO spell (champion_id, spell_name, description, spell_picture, spell_type) VALUES ($1, $2, $3, $4, $5) RETURNING *', [champion_id, spell_name, description, spell_picture, spell_type]
+            'INSERT INTO spell (champion_id, spell_name, description, spell_picture) VALUES ($1, $2, $3, $4) RETURNING *', [champion_id, spell_name, description, spell_picture ]
         )
     return result.rows[0];
     }
 
-    static async updateSpell(spell_id, {champion_id, spell_name, description, spell_picture, spell_type}){
+    static async updateSpell(spell_id, {champion_id, spell_name, description, spell_picture}){
         const result = await pool.query(
-            'UPDATE spell SET champion_id = $1, spell_name = $2, description = $3, spell_picture = $4, spell_type = $5 WHERE spell_id = $6 RETURNING *', [champion_id, spell_name, description, spell_picture, spell_type, spell_id]
+            'UPDATE spell SET champion_id = $1, spell_name = $2, description = $3, spell_picture = $4, spell_id = $5 RETURNING *', [champion_id, spell_name, description, spell_picture, spell_id]
         )
     }
 

@@ -66,7 +66,7 @@ router.patch('/:spell_id', async (req, res) => {
             spell_name: req.body.spell_name || existingSpell.spell_name,
             description: req.body.description || existingSpell.description,
             spell_picture: req.body.spell_picture || existingSpell.spell_picture,
-            spell_type: req.body.spell_type || existingSpell.spell_type
+            
         });
 
         res.json(updatedSpell);

@@ -133,6 +133,9 @@ CREATE TABLE spell (
     FOREIGN KEY (champion_id) REFERENCES champion(champion_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_summoners_puuid ON summoners(puuid);
 
 -- Insérer Irelia (Mid)
 INSERT INTO champion (champion_name, role, lore, champion_image)
