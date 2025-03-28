@@ -122,7 +122,7 @@ CREATE TABLE rune (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE spells (
+CREATE TABLE spell (
     spell_id SERIAL PRIMARY KEY,
     spell_name VARCHAR(255) UNIQUE NOT NULL,
     description TEXT NOT NULL,
@@ -136,11 +136,11 @@ CREATE TABLE spells (
 
 -- Insérer Irelia (Mid)
 INSERT INTO champion (champion_name, role, lore, champion_image)
-VALUES ('Irelia', 'Mid', 'Irelia est une maîtresse des lames et une combattante redoutable. Son passé tragique l\’a conduite à devenir une guerrière implacable, capable de manipuler les lames flottantes qu\’elle utilise pour détruire ses ennemis.', 'public/img/irelia.png');
+VALUES ('Irelia', 'Mid', 'Irelia est une maîtresse des lames et une combattante redoutable. Son passé tragique l''a conduite à devenir une guerrière implacable, capable de manipuler les lames flottantes qu''elle utilise pour détruire ses ennemis.', 'public/img/irelia.png');
 
 -- Insérer Garen (Top)
 INSERT INTO champion (champion_name, role, lore, champion_image)
-VALUES ('Garen', 'Top', 'Garen, le vaillant soldat de Demacia, est un guerrier résolu et implacable. Son sens de l\'honneur et de la justice guide ses actions, et il est prêt à tout pour défendre son pays et ses idéaux.', 'public/img/garen.png');
+VALUES ('Garen', 'Top', 'Garen, le vaillant soldat de Demacia, est un guerrier résolu et implacable. Son sens de l''honneur et de la justice guide ses actions, et il est prêt à tout pour défendre son pays et ses idéaux.', 'public/img/garen.png');
 
 -- Insérer Jinx (ADC)
 INSERT INTO champion (champion_name, role, lore, champion_image)
@@ -148,15 +148,13 @@ VALUES ('Jinx', 'ADC', 'Jinx, la folle furieuse, est une criminelle excentrique 
 
 -- Insérer Lee Sin (Jungle)
 INSERT INTO champion (champion_name, role, lore, champion_image)
-VALUES ('Lee Sin', 'Jungle', 'Lee Sin, le moine aveugle, est un maître des arts martiaux. Malgré sa cécité, il navigue à travers les ténèbres avec une précision mortelle, protégeant ceux qui en ont besoin et cherchant l\'équilibre dans un monde chaotique.', 'public/img/lee_sin.png');
+VALUES ('Lee Sin', 'Jungle', 'Lee Sin, le moine aveugle, est un maître des arts martiaux. Malgré sa cécité, il navigue à travers les ténèbres avec une précision mortelle, protégeant ceux qui en ont besoin et cherchant l''équilibre dans un monde chaotique.', 'public/img/lee_sin.png');
 
 -- Insérer Janna (Support)
 INSERT INTO champion (champion_name, role, lore, champion_image)
-VALUES ('Janna', 'Support', 'Janna, l\'esprit des tempêtes, incarne la puissance de la nature. En tant que protectrice des faibles, elle utilise ses pouvoirs pour aider ses alliés et contrer les menaces qui pèsent sur Runeterra.', 'public/img/janna.png');
- 
+VALUES ('Janna', 'Support', 'Janna, l''esprit des tempêtes, incarne la puissance de la nature. En tant que protectrice des faibles, elle utilise ses pouvoirs pour aider ses alliés et contrer les menaces qui pèsent sur Runeterra.', 'public/img/janna.png');
 
 -- Insérer un invocateur (summoner)
 INSERT INTO summoners (summoner_name, puuid, region, profile_icon_id, summoner_level, ranked_division, lp)
 VALUES ('IreliaFan123', '123456789abcdef123456789abcdef12', 'EUW', '101', 30, 'Gold', 150);
-
 
