@@ -43,7 +43,7 @@ router.get('/summoner-id/:id/ranked', async (req, res) => {
 
 // GET flex stats
 // PAS UTILISE POUR L'INSTANT
-router.get('/summoner-id/:id/flex', async (req, res) => {
+/*router.get('/summoner-id/:id/flex', async (req, res) => {
     try {
         const stats = await Summoner.getFlexStats(req.params.id);
         res.status(200).json(stats);
@@ -51,7 +51,7 @@ router.get('/summoner-id/:id/flex', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
+*/
 // GET normal stats
 // PAS UTILISE POUR L'INSTANT
 router.get('/summoner-id/:id/normal', async (req, res) => {

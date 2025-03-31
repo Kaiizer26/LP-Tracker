@@ -1,4 +1,7 @@
 const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+
 const bookRoutes = require('./routes/bookRoutes');
 const summonerRoutes = require('./routes/summonerRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -10,11 +13,21 @@ const spellRoutes = require('./routes/spellRoutes');
 const ChampionMasteryRoutes = require('./routes/championmasteryRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const matchparticipantRoutes = require('./routes/matchparticipantRoutes');
-require('dotenv').config();
 
-const app= express();
+const app = express();
+
+// ✅ CORS en premier
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  methods: 'GET,POST,PUT,DELETE',
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+// ✅ Puis les middlewares
 app.use(express.json());
 
+// ✅ Ensuite les routes
 app.use('/books', bookRoutes);
 app.use('/summoners', summonerRoutes);
 app.use('/users', userRoutes);
@@ -27,7 +40,8 @@ app.use('/championmastery', ChampionMasteryRoutes);
 app.use('/stats', statsRoutes);
 app.use('/matchparticipant', matchparticipantRoutes);
 
-const PORT = process.env.PORT || 3000;
+// ✅ Enfin, démarrage du serveur
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port ${PORT}`);
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });
