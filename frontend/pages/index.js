@@ -12,7 +12,9 @@ export default function Home() {
 
       {/* Navbar */}
       <nav className="flex justify-between items-center p-6 bg-transparent fixed w-full top-0 z-50">
+        <Link href="/">
         <div className="text-2xl font-bold">LP-TRACKER</div>
+        </Link>
         <div>
           <Link href="/register">
           <button className="bg-red-500 px-4 py-2 rounded-lg">S'inscrire</button>
