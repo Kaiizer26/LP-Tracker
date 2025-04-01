@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import '/src/app/globals.css';
 
-
 export default function ProfilePage() {
   const [summoner, setSummoner] = useState(null);
   const [rankedStats, setRankedStats] = useState(null);
@@ -100,26 +99,55 @@ export default function ProfilePage() {
         </header>
 
         {/* Statistiques Ranked */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">Ranked Solo</h2>
-            <p>{rankedStats.rank} - {rankedStats.lp} LP</p>
-            <p>{rankedStats.wins}W {rankedStats.losses}L ({rankedStats.winrate}% Win Rate)</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          {/* Ranked Solo */}
+          <div className="bg-gray-800 p-4 rounded-lg shadow-md flex items-center space-x-4">
+            <Image
+              src={
+                rankedStats && rankedStats.rank
+                  ? `/img/rank/${rankedStats.ranked_division.toLowerCase()}.png`
+                  : '/img/rank/default.png' // Image par défaut si rankedStats.rank est undefined
+              }
+              alt={rankedStats && rankedStats.rank ? `${rankedStats.rank} Icon` : 'Default Rank Icon'}
+              width={64}
+              height={64}
+              className="rounded"
+            />
+            <div>
+              <h2 className="text-lg font-semibold">Ranked Solo</h2>
+              <p className="text-xl font-bold">{rankedStats?.ranked_division || 'N/A'}</p>
+              <p className="text-sm text-gray-400">{rankedStats?.lp || 0} LP</p>
+              <p className="text-sm">
+                {rankedStats?.wins || 0}W {rankedStats?.losses || 0}L ({rankedStats?.winrate || 0}% Win Rate)
+              </p>
+            </div>
           </div>
 
-          {/* Section flex temporairement supprimée */}
-          {/* <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">Ranked Flex</h2>
-            <p>{flexStats.rank} - {flexStats.lp} LP</p>
-            <p>{flexStats.wins}W {flexStats.losses}L ({flexStats.winrate}% Win Rate)</p>
-          </div> */}
-
-          {/* Stats globales */}
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">Résumé</h2>
-            <p>{rankedStats.winrate}% WR - {rankedStats.kda} KDA</p>
-            <p>Derniers 20 matchs: {rankedStats.avgKills} / {rankedStats.avgDeaths} / {rankedStats.avgAssists}</p>
+          {/* Ranked Flex */}
+          {/* Cette section est commentée pour l'instant */}
+          {/*
+          <div className="bg-gray-800 p-4 rounded-lg shadow-md flex items-center space-x-4">
+            <Image
+              src={
+                flexStats && flexStats.rank
+                  ? `/img/ranks/${flexStats.rank.toLowerCase().replace(' ', '_')}.png`
+                  : '/img/rank/default.png' // Image par défaut si flexStats.rank est undefined
+              }
+              alt={flexStats && flexStats.rank ? `${flexStats.rank} Icon` : 'Default Rank Icon'}
+              width={64}
+              height={64}
+              className="rounded"
+            />
+            <div>
+              <h2 className="text-lg font-semibold">Ranked Flex</h2>
+              <p className="text-xl font-bold">{flexStats?.rank || 'N/A'}</p>
+              <p className="text-sm text-gray-400">{flexStats?.lp || 0} LP</p>
+              <p className="text-sm">
+                {flexStats?.wins || 0}W {flexStats?.losses || 0}L ({flexStats?.winrate || 0}% Win Rate)
+              </p>
+            </div>
           </div>
+          */}
         </div>
 
         {/* Historique de matchs */}
