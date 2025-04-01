@@ -66,7 +66,7 @@ CREATE TABLE match_participants (
 CREATE TABLE teams (
     team_id SERIAL PRIMARY KEY,
     match_id BIGINT NOT NULL,
-    team_name VARCHAR(255) NOT NULL, -- Nom de l'équipe (Blue, Red, etc.)
+    team_name VARCHAR(255), -- Nom de l'équipe (Blue, Red, etc.)
     team_side VARCHAR(10) NOT NULL CHECK (team_side IN ('Blue', 'Red')), -- Blue ou Red
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE
