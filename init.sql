@@ -49,6 +49,7 @@ CREATE TABLE matches (
 CREATE TABLE match_participants (
     participant_id SERIAL PRIMARY KEY,
     match_id BIGINT NOT NULL,
+    champion_id INT NOT NULL,
     summoner_id INT NOT NULL, -- Lien vers le joueur (summoner)
     team_id INT NOT NULL, -- Lien vers l'équipe à laquelle le joueur appartient
     kills INT NOT NULL DEFAULT 0, -- Kills du joueur dans la game
