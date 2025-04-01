@@ -98,79 +98,60 @@ export default function ProfilePage() {
           <button className="ml-auto bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">Update</button>
         </header>
 
-        {/* Statistiques Ranked */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          {/* Ranked Solo */}
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md flex items-center space-x-4">
-            <Image
-              src={
-                rankedStats && rankedStats.rank
-                  ? `/img/rank/${rankedStats.ranked_division.toLowerCase()}.png`
-                  : '/img/rank/default.png' // Image par défaut si rankedStats.rank est undefined
-              }
-              alt={rankedStats && rankedStats.rank ? `${rankedStats.rank} Icon` : 'Default Rank Icon'}
-              width={64}
-              height={64}
-              className="rounded"
-            />
-            <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          {/* Colonne de gauche : Statistiques */}
+          <div className="col-span-1">
+            {/* Statistiques Ranked */}
+            <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-6">
               <h2 className="text-lg font-semibold">Ranked Solo</h2>
-              <p className="text-xl font-bold">{rankedStats?.ranked_division || 'N/A'}</p>
-              <p className="text-sm text-gray-400">{rankedStats?.lp || 0} LP</p>
-              <p className="text-sm">
-                {rankedStats?.wins || 0}W {rankedStats?.losses || 0}L ({rankedStats?.winrate || 0}% Win Rate)
-              </p>
-            </div>
-          </div>
-
-          {/* Ranked Flex */}
-          {/* Cette section est commentée pour l'instant */}
-          {/*
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md flex items-center space-x-4">
-            <Image
-              src={
-                flexStats && flexStats.rank
-                  ? `/img/ranks/${flexStats.rank.toLowerCase().replace(' ', '_')}.png`
-                  : '/img/rank/default.png' // Image par défaut si flexStats.rank est undefined
-              }
-              alt={flexStats && flexStats.rank ? `${flexStats.rank} Icon` : 'Default Rank Icon'}
-              width={64}
-              height={64}
-              className="rounded"
-            />
-            <div>
-              <h2 className="text-lg font-semibold">Ranked Flex</h2>
-              <p className="text-xl font-bold">{flexStats?.rank || 'N/A'}</p>
-              <p className="text-sm text-gray-400">{flexStats?.lp || 0} LP</p>
-              <p className="text-sm">
-                {flexStats?.wins || 0}W {flexStats?.losses || 0}L ({flexStats?.winrate || 0}% Win Rate)
-              </p>
-            </div>
-          </div>
-          */}
-        </div>
-
-        {/* Historique de matchs */}
-        <div className="bg-gray-800 mt-6 p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold">Match History</h2>
-          {matchHistory.map((match, index) => (
-            <div key={index} className="mt-4 bg-gray-700 p-3 rounded-lg">
-              <h3 className="font-semibold">{match.result}</h3>
-              <div className="flex justify-between">
-                <p className={match.result === 'Victory' ? 'text-blue-400' : 'text-red-400'}>
-                  {match.result}
-                </p>
-                {match.lpChange && <p className="text-green-400">{match.lpChange}</p>}
-              </div>
-              <p>{match.kda} - {match.kdaRatio} KDA</p>
-              <p>Damage: {match.damage.toLocaleString()}</p>
-              <div className="flex mt-2 space-x-2 overflow-x-auto">
-                {match.team.map((player, idx) => (
-                  <div key={idx} className="bg-gray-600 p-2 rounded">{player.name} - {player.kda}</div>
-                ))}
+              <div className="flex items-center mt-4">
+                <Image
+                  src={
+                    rankedStats && rankedStats.ranked_division
+                      ? `/img/rank/${rankedStats.ranked_division.toLowerCase().replace(' ', '_')}.png`
+                      : '/img/rank/default.png'
+                  }
+                  alt={rankedStats && rankedStats.ranked_division ? `${rankedStats.ranked_division} Icon` : 'Default Rank Icon'}
+                  width={64}
+                  height={64}
+                  className="rounded"
+                />
+                <div className="ml-4">
+                  <p className="text-xl font-bold">{rankedStats?.ranked_division || 'N/A'}</p>
+                  <p className="text-sm text-gray-400">{rankedStats?.lp || 0} LP</p>
+                  <p className="text-sm">{rankedStats?.wins || 0}W {rankedStats?.losses || 0}L ({rankedStats?.winrate || 0}% Win Rate)</p>
+                </div>
               </div>
             </div>
-          ))}
+
+            {/* Autres statistiques (si nécessaire) */}
+            {/* Ajoutez d'autres sections ici, comme Champion Stats ou Ranked Flex */}
+          </div>
+
+          {/* Colonne de droite : Historique des matchs */}
+          <div className="col-span-2">
+            <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+              <h2 className="text-lg font-semibold">Match History</h2>
+              {matchHistory.map((match, index) => (
+                <div key={index} className="mt-4 bg-gray-700 p-3 rounded-lg">
+                  <h3 className="font-semibold">{match.result}</h3>
+                  <div className="flex justify-between">
+                    <p className={match.result === 'Victory' ? 'text-blue-400' : 'text-red-400'}>
+                      {match.result}
+                    </p>
+                    {match.lpChange && <p className="text-green-400">{match.lpChange}</p>}
+                  </div>
+                  <p>{match.kda} - {match.kdaRatio} KDA</p>
+                  <p>Damage: {match.damage.toLocaleString()}</p>
+                  <div className="flex mt-2 space-x-2 overflow-x-auto">
+                    {match.team.map((player, idx) => (
+                      <div key={idx} className="bg-gray-600 p-2 rounded">{player.name} - {player.kda}</div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
