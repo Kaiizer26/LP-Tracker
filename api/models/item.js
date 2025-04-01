@@ -10,53 +10,31 @@ const pool = new Pool ({
 })
 
 class Item {
-    // 📌 Créer un nouvel objet
-    static async createItem({ itemName, description, price }) {
-        const result = await pool.query(
-            `INSERT INTO items (item_name, description, price, created_at, updated_at) 
-             VALUES ($1, $2, $3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) 
-             RETURNING *`,
-            [itemName, description, price]
-        );
-        return result.rows[0]; // Retourne l'objet créé
+    static async getAllItems(){
+        const result = await pool.query('SELECT * FROM items');
+        return result.rows;
     }
 
-    // 📌 Récupérer tous les objets
-    static async getAllItems() {
-        const result = await pool.query(
-            `SELECT * FROM items ORDER BY item_name ASC`
-        );
-        return result.rows; // Retourne tous les objets
+    static async getItemById(item_id){
+        const result = await pool.query('SELECT * FROM items WHERE item_id = $1', [item_id])
+        return result.rows[0]
     }
 
-    // 📌 Récupérer un objet spécifique par son ID
-    static async getItemById(itemId) {
+    static async createItem({item_name, description, price}){
         const result = await pool.query(
-            `SELECT * FROM items WHERE item_id = $1`,
-            [itemId]
-        );
-        return result.rows[0]; // Retourne un seul objet ou null
+            'INSERT INTO items (item_name, description, price) VALUES ($1, $2, $3) RETURNING *', [item_name, description, price]
+        )
+    return result.rows[0];
     }
 
-    // 📌 Mettre à jour un objet (Met aussi à jour `updated_at` manuellement)
-    static async updateItem(itemId, { itemName, description, price }) {
+    static async updateItem(item_id, {item_name, description, price}){
         const result = await pool.query(
-            `UPDATE items 
-             SET item_name = $1, description = $2, price = $3, updated_at = CURRENT_TIMESTAMP
-             WHERE item_id = $4 
-             RETURNING *`,
-            [itemName, description, price, itemId]
-        );
-        return result.rows[0]; // Retourne l'objet mis à jour
+            'UPDATE items SET item_name = $1, description = $2, price = $3 WHERE item_id = $4 RETURNING *', [item_name, description, price, item_id]
+        )
     }
-// changement 
-    // 📌 Supprimer un objet
-    static async deleteItem(itemId) {
-        const result = await pool.query(
-            `DELETE FROM items WHERE item_id = $1 RETURNING *`,
-            [itemId]
-        );
-        return result.rows[0]; // Retourne l'objet supprimé
+
+    static async deleteItem(item_id){
+        await pool.query('DELETE FROM items WHERE item_id = $1', [item_id]);
     }
 }
 

@@ -8,15 +8,45 @@ export default function Login() {
     email: '',
     password: ''
   });
+  const [errorMessage, setErrorMessage] = useState(''); // Message d'erreur
+  const [successMessage, setSuccessMessage] = useState(''); // Message de succès
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Indicateur d'authentification
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Ajoute ici la logique de connexion avec une API
+    setErrorMessage(''); // Réinitialiser le message d'erreur avant de soumettre
+    setSuccessMessage(''); // Réinitialiser le message de succès avant de soumettre
+
+    try {
+      const response = await fetch('http://localhost:3002/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Connexion réussie', data);
+        setSuccessMessage('Connexion réussie ! Bienvenue ' + data.username);
+        setIsAuthenticated(true); // Utilisateur authentifié
+
+        // Vous pouvez rediriger l'utilisateur vers une autre page après la connexion
+        // Exemple : window.location.href = '/home';
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.error); // Afficher l'erreur retournée par l'API
+        console.error('Erreur lors de la connexion:', errorData.error);
+      }
+    } catch (error) {
+      console.error('Erreur de connexion à l\'API:', error);
+      setErrorMessage('Erreur de connexion au serveur. Veuillez réessayer plus tard.');
+    }
   };
 
   return (
@@ -64,6 +94,15 @@ export default function Login() {
                 required 
               />
             </div>
+
+            {/* Affichage des messages d'erreur ou de succès */}
+            {errorMessage && (
+              <p className="text-red-500 text-center mt-4">{errorMessage}</p>
+            )}
+
+            {successMessage && (
+              <p className="text-green-500 text-center mt-4">{successMessage}</p>
+            )}
             
             <button type="submit" className="w-full bg-blue-600 px-4 py-2 rounded-lg mt-4 text-white font-bold">Se connecter</button>
           </form>

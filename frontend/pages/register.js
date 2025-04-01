@@ -10,14 +10,40 @@ export default function Register() {
     password: ''
   });
 
+  const [error, setError] = useState(null);  // Gérer l'affichage des erreurs
+  const [success, setSuccess] = useState(null);  // Gérer le message de succès
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Ajoute ici la logique d'inscription avec une API
+    setError(null);  // Réinitialiser l'erreur avant la soumission
+    setSuccess(null);  // Réinitialiser le succès avant la soumission
+
+    try {
+      const response = await fetch('http://localhost:3002/users', {  // Vérifie le port de ton backend
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Utilisateur créé', data);
+        setSuccess("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+      } else {
+        const errorData = await response.json();
+        console.error('Erreur lors de l\'inscription:', errorData.error);
+        setError(errorData.error || "Une erreur s'est produite lors de l'inscription.");  // Afficher l'erreur
+      }
+    } catch (error) {
+      console.error('Erreur de connexion à l\'API:', error);
+      setError("Erreur de connexion au serveur, veuillez réessayer.");  // Afficher un message générique d'erreur
+    }
   };
 
   return (
@@ -78,6 +104,12 @@ export default function Register() {
                 required 
               />
             </div>
+
+            {/* Affichage du message d'erreur */}
+            {error && <p className="text-red-500 text-center">{error}</p>}
+            
+            {/* Affichage du message de succès */}
+            {success && <p className="text-green-500 text-center">{success}</p>}
             
             <button type="submit" className="w-full bg-red-500 px-4 py-2 rounded-lg mt-4 text-white font-bold">S'inscrire</button>
           </form>
