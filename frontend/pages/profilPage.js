@@ -93,7 +93,7 @@ export default function ProfilePage() {
             className="rounded-full"
           />
           <div>
-            <h1 className="text-xl font-bold">{summoner.summoner_name} #{summoner.region}</h1>
+            <h1 className="text-xl font-bold">{summoner.summoner_name} #{summoner.puuid}</h1>
             <p className="text-sm text-gray-400">Niveau {summoner.summoner_level}</p>
           </div>
           <button className="ml-auto bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">Update</button>

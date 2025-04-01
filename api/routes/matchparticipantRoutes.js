@@ -22,6 +22,14 @@ router.get('/:participant_id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+router.get('/summoner-id/:summoner_id', async (req, res) => {
+    try {
+        const matchparticipant = await MatchParticipant.getMatchParticipantsBySummonerId(req.params.summoner_id);
+        matchparticipant ? res.status(200).json(matchparticipant) : res.status(404).json({ message: "pas trouvé" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 router.post('/', async (req, res) => {
     try {

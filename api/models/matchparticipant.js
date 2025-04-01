@@ -14,6 +14,15 @@ class MatchParticipant {
     static async getMatchParticipantsByMatchId() {
 
     }
+
+    // Obtenir tous les match auxquels un summoner a participé
+    static async getMatchParticipantsBySummonerId(summoner_id) {
+        const result = await pool.query(
+            `SELECT mp.participant_id, mp.match_id, mp.team_id, mp.kills, mp.deaths, mp.assists, mp.gold_earned, mp.role, m.match_name, m.game_duration, m.start_time, m.result, t.team_name, t.team_side FROM match_participants mp INNER JOIN matches m ON mp.match_id = m.match_id INNER JOIN teams t ON mp.team_id = t.team_id WHERE mp.summoner_id = $1 ORDER BY m.start_time DESC`, [summoner_id]
+        );
+        return result.rows;
+    }
+
     static async getAllMatchParticipants(){
         const result = await pool.query('SELECT * FROM match_participants');
         return result.rows;
