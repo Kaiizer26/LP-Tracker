@@ -30,6 +30,28 @@ router.get('/summoner-id/:summoner_id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+//  Obtenir le KDA d'un joueur par son summoner_id
+router.get('/summoner-id/:summoner_id/kda', async (req, res) => {
+    try {
+        const kda = await MatchParticipant.calculateKDABySummonerId(req.params.summoner_id);
+        kda ? res.status(200).json(kda) : res.status(404).json({ message: "KDA non trouvé pour ce joueur." });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+router.get('/match/:match_id/', async (req, res) => {
+    try {
+        const participants = await MatchParticipant.getMatchParticipantsByMatchId(req.params.match_id);
+        if (participants.length > 0) {
+            res.status(200).json(participants);
+        } else {
+            res.status(404).json({ message: "No participants found for this match." });
+        }
+    } catch (error) {
+        console.error("Error fetching participants by match_id:", error);
+        res.status(500).json({ error: error.message });
+    }
+}); 
 
 router.post('/', async (req, res) => {
     try {

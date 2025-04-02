@@ -12,15 +12,20 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-// GET SUMMONER by summoner name
-router.get('/summoner-name/:name', async (req, res) => {
+// GET - Recherche un invocateur par son nom (prise en charge de la recherche partielle)
+router.get('/summoner-search/:name', async (req, res) => {
     try {
-        const user = await Summoner.getSummonerBySummonerName(req.params.name);
-        user ? res.status(200).json(user) : res.status(404).json({ message: "Summoner not found" });
+        const summoners = await Summoner.searchSummonerByName(req.params.name);
+        if (summoners.length > 0) {
+            res.status(200).json(summoners);
+        } else {
+            res.status(404).json({ message: "Aucun invocateur trouvé avec ce nom" });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
 // GET Summoner by id
 router.get('/summoner-id/:summoner_id', async (req, res) => {
     try {

@@ -57,6 +57,8 @@ CREATE TABLE match_participants (
     assists INT NOT NULL DEFAULT 0, -- Assists du joueur dans la game
     gold_earned INT NOT NULL DEFAULT 0, -- Or gagné par le joueur
     role VARCHAR(50) NOT NULL, -- Rôle du joueur (Top, Mid, etc.)
+    profit INT,  -- Gain ou perte de LP
+    summoner_spells VARCHAR(255)[],  -- Tableau de sorts utilisés (par exemple : ["Flash", "Ignite", "Teleport"])
     FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE,
     FOREIGN KEY (summoner_id) REFERENCES summoners(summoner_id) ON DELETE CASCADE,
     FOREIGN KEY (team_id) REFERENCES teams(team_id) ON DELETE CASCADE

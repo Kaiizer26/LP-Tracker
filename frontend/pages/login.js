@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    email: '',
+    email: '', 
     password: ''
   });
   const [errorMessage, setErrorMessage] = useState(''); // Message d'erreur
@@ -81,7 +81,7 @@ export default function Login() {
         <Link href="/" className="text-blue-400 text-sm absolute -top-6 left-0">&lt; Retour à l'accueil</Link>
         <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full">
           <h2 className="text-3xl font-bold text-center">Se connecter</h2>
-          <p className="text-gray-400 text-center mt-2">Ravi de vous revoir !</p>
+          <p className="text-gray-400 text-center mt-2">Bienvenue de retour !</p>
           
           <form className="mt-6" onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -135,3 +135,4 @@ export default function Login() {
     </div>
   );
 }
+

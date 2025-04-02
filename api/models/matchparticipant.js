@@ -34,6 +34,30 @@ class MatchParticipant {
         return result.rows;
     }
 
+    static async getMatchByMatchParticipantId(participant_id) {
+        const result = await pool.query(
+            `SELECT m.*
+             FROM matches m
+             INNER JOIN match_participants mp ON m.match_id = mp.match_id
+             WHERE mp.participant_id = $1`,
+            [participant_id]
+        );
+        return result.rows[0]; // Retourne les informations du match
+    }
+
+    static async getMatchParticipantsByMatchId(match_id) {
+        const result = await pool.query(
+            `SELECT mp.participant_id, mp.match_id, mp.summoner_id, mp.team_id, mp.kills, mp.deaths, mp.assists, mp.gold_earned, mp.role, 
+                    s.summoner_name, t.team_name, t.team_side
+             FROM match_participants mp
+             INNER JOIN summoners s ON mp.summoner_id = s.summoner_id
+             INNER JOIN teams t ON mp.team_id = t.team_id
+             WHERE mp.match_id = $1`,
+            [match_id]
+        );
+        return result.rows; // Retourne tous les participants du match
+    }
+    
     static async createMatchParticipant({ match_id, summoner_id, team_id, kills, deaths, assists, gold_earned, role }) {
         const result = await pool.query(
             'INSERT INTO match_participants (match_id, summoner_id, team_id, kills, deaths, assists, gold_earned, role) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
@@ -60,6 +84,25 @@ class MatchParticipant {
     static async deleteMatchParticipant(participant_id) {
         await pool.query('DELETE FROM match_participants WHERE participant_id = $1', [participant_id]);
     }
+
+    static async calculateKDABySummonerId(summoner_id) {
+        const result = await pool.query(
+            `SELECT 
+                SUM(mp.kills) AS total_kills,
+                SUM(mp.deaths) AS total_deaths,
+                SUM(mp.assists) AS total_assists,
+                CASE 
+                    WHEN SUM(mp.deaths) = 0 THEN NULL 
+                    ELSE ROUND((SUM(mp.kills) + SUM(mp.assists))::DECIMAL / SUM(mp.deaths), 2) 
+                END AS kda
+             FROM match_participants mp
+             WHERE mp.summoner_id = $1`,
+            [summoner_id]
+        );
+        return result.rows[0]; // Retourne le KDA total
+    }
 }
+
+
 
 module.exports = MatchParticipant;
