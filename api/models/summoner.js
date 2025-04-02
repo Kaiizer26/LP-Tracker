@@ -102,6 +102,15 @@ class Summoner {
         );
         return result.rows[0];
     }
+
+    static async searchSummonerByName(name) {
+        const result = await pool.query(
+            `SELECT * FROM summoners 
+             WHERE summoner_name ILIKE $1`,  // ILIKE permet une recherche insensible à la casse
+            [`%${name}%`]  // Le % permet de rechercher une sous-chaîne
+        );
+        return result.rows;
+    }
 }
 
 

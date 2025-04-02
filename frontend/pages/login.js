@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 export default function Login() {
   const [formData, setFormData] = useState({
-    email: '',
+    email: '', 
     password: ''
   });
 
@@ -36,7 +36,7 @@ export default function Login() {
         <Link href="/" className="text-blue-400 text-sm absolute -top-6 left-0">&lt; Retour à l'accueil</Link>
         <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full">
           <h2 className="text-3xl font-bold text-center">Se connecter</h2>
-          <p className="text-gray-400 text-center mt-2">Ravi de vous revoir !</p>
+          <p className="text-gray-400 text-center mt-2">Bienvenue de retour !</p>
           
           <form className="mt-6" onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -64,8 +64,9 @@ export default function Login() {
                 required 
               />
             </div>
-            
-            <button type="submit" className="w-full bg-blue-600 px-4 py-2 rounded-lg mt-4 text-white font-bold">Se connecter</button>
+            <button type="submit" className="w-full bg-red-500 px-4 py-2 rounded-lg mt-4 text-white font-bold">
+                Se connecter
+            </button>
           </form>
           
           <p className="text-gray-400 text-center mt-4">

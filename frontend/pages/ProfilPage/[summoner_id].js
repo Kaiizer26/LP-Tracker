@@ -1,75 +1,11 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
+import axios from "axios";
 import "/src/app/globals.css";
 
-export default function ProfilePage() {
-  const [summoner, setSummoner] = useState(null);
-  const [rankedStats, setRankedStats] = useState(null);
-  const [matchHistory, setMatchHistory] = useState([]); // Simulé ici
-  const [stats, setStats] = useState(null);
-  const summonerName = "Kaiizer";
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        // Récupérer les informations du summoner
-        const summonerRes = await fetch(
-          `http://localhost:3001/summoners/summoner-name/${summonerName}`
-        );
-        if (!summonerRes.ok) {
-          throw new Error(`Erreur API Summoner: ${summonerRes.status}`);
-        }
-        const summonerData = await summonerRes.json();
-        setSummoner(summonerData);
-
-        const summonerId = summonerData.summoner_id;
-
-        // Récupérer les statistiques classées
-        const rankedRes = await fetch(
-          `http://localhost:3001/summoners/summoner-id/${summonerId}/ranked`
-        );
-        console.log(summonerId);
-        if (!rankedRes.ok) {
-          throw new Error(`Erreur API Ranked: ${rankedRes.status}`);
-        }
-        const rankedData = await rankedRes.json();
-        setRankedStats(rankedData);
-
-        // Récupérer les statistiques globales
-        const statsRes = await fetch(
-          `http://localhost:3001/stats/summoner-id/${summonerId}`
-        );
-        if (!statsRes.ok) {
-          throw new Error(`Erreur API Stats: ${statsRes.status}`);
-        }
-        const statsData = await statsRes.json();
-        setStats(statsData);
-
-        // Récupérer l'historique des matchs dynamiquement
-        const matchHistoryRes = await fetch(
-          `http://localhost:3001/matchparticipant/summoner-id/${summonerId}`
-        );
-        if (!matchHistoryRes.ok) {
-          throw new Error(
-            `Erreur API Match History: ${matchHistoryRes.status}`
-          );
-        }
-        const matchHistoryData = await matchHistoryRes.json();
-        setMatchHistory(matchHistoryData);
-      } catch (err) {
-        console.error("Erreur lors du fetch des données:", err);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  if (!summoner || !rankedStats) {
-    // Désactive la vérification de flexStats
-    return <div className="text-white p-4">Chargement...</div>;
+const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
+  if (error) {
+    return <div className="text-red-500 p-4">Erreur : {error}</div>;
   }
 
   return (
@@ -84,7 +20,7 @@ export default function ProfilePage() {
     >
       {/* Navbar */}
       <nav className="flex justify-between items-center p-6">
-        <div className="text-2xl font-bold">LP-TRACKER</div>
+        <Link href="/" className="text-2xl font-bold">LP-TRACKER</Link>
         <div>
           <Link href="/register">
             <button className="bg-red-500 px-4 py-2 rounded-lg">
@@ -121,6 +57,7 @@ export default function ProfilePage() {
             Update
           </button>
         </header>
+
         {/* Statistiques Ranked */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
@@ -134,13 +71,6 @@ export default function ProfilePage() {
             </p>
           </div>
 
-          {/* Section flex temporairement supprimée */}
-          {/* <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">Ranked Flex</h2>
-            <p>{flexStats.rank} - {flexStats.lp} LP</p>
-            <p>{flexStats.wins}W {flexStats.losses}L ({flexStats.winrate}% Win Rate)</p>
-          </div> */}
-
           {/* Stats globales */}
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Résumé</h2>
@@ -153,7 +83,8 @@ export default function ProfilePage() {
             </p>
           </div>
         </div>
-        Historique de matchs
+
+        {/* Historique de matchs */}
         <div className="bg-gray-800 mt-6 p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-semibold">Match History</h2>
           {Array.isArray(matchHistory) && matchHistory.length > 0 ? (
@@ -197,4 +128,56 @@ export default function ProfilePage() {
       </div>
     </div>
   );
+};
+
+// Fonction pour récupérer les données côté serveur
+export async function getServerSideProps(context) {
+  const { summoner_id } = context.params;
+
+  try {
+    // Récupérer les informations du summoner
+    const summonerRes = await axios.get(
+      `http://localhost:3000/summoners/summoner-id/${summoner_id}`
+    );
+    const summoner = summonerRes.data;
+
+    // Récupérer les statistiques classées
+    const rankedRes = await axios.get(
+      `http://localhost:3000/summoners/summoner-id/${summoner_id}/ranked`
+    );
+    const rankedStats = rankedRes.data;
+
+    // Récupérer les statistiques globales
+    const statsRes = await axios.get(
+      `http://localhost:3000/stats/summoner-id/${summoner_id}`
+    );
+    const stats = statsRes.data;
+
+    // Récupérer l'historique des matchs
+    const matchHistoryRes = await axios.get(
+      `http://localhost:3000/matchparticipant/summoner-id/${summoner_id}`
+    );
+    const matchHistory = matchHistoryRes.data;
+
+    // Retourner les données comme props
+    return {
+      props: {
+        summoner,
+        rankedStats,
+        stats,
+        matchHistory,
+      },
+    };
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données :", error);
+
+    // En cas d'erreur, retourner une page avec un message d'erreur
+    return {
+      props: {
+        error: "Impossible de récupérer les données.",
+      },
+    };
+  }
 }
+
+export default ProfilePage;
