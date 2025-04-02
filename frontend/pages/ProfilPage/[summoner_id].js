@@ -107,13 +107,24 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
                 <p>
                   {match.kills} / {match.deaths} / {match.assists} KDA
                 </p>
-                <p>Damage: {match.damage?.toLocaleString() || 0}</p>
+                <p>Damage: {match.gold_earned?.toLocaleString() || 0}</p>
                 <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
                 <p>Match: {match.match_name}</p>
                 <div className="flex mt-2 space-x-2 overflow-x-auto">
                   <div className="bg-gray-600 p-2 rounded">
                     Team: {match.team_name} ({match.team_side})
                   </div>
+                </div>
+                {/* Détails du match */}
+                <div className="mt-4">
+                  <h3 className="text-md font-semibold">Match Details:</h3>
+                  <p>Game Type: {match.matchDetails.game_type}</p>
+                  <p>
+                    Duration:{" "}
+                    {Math.floor(match.matchDetails.game_duration / 60)}m{" "}
+                    {match.matchDetails.game_duration % 60}s
+                  </p>
+                  <p>Winning Team: {match.matchDetails.winning_team_side}</p>
                 </div>
                 {/* Liste des participants */}
                 <div className="mt-4">
@@ -146,7 +157,6 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
   );
 };
 
-
 export async function getServerSideProps(context) {
   const { summoner_id } = context.params;
 
@@ -175,15 +185,23 @@ export async function getServerSideProps(context) {
     );
     const matchHistory = matchHistoryRes.data;
 
-    // Récupérer les participants pour chaque match
-    const matchHistoryWithParticipants = await Promise.all(
+    // Récupérer les participants et les détails du match pour chaque match
+    const matchHistoryWithDetails = await Promise.all(
       matchHistory.map(async (match) => {
+        // Récupérer les participants du match
         const participantsRes = await axios.get(
           `http://localhost:3000/matchparticipant/match/${match.match_id}/`
         );
+
+        // Récupérer les détails du match via participant_id
+        const matchDetailsRes = await axios.get(
+          `http://localhost:3000/matchparticipant/match/participant_id/${match.participant_id}`
+        );
+
         return {
           ...match,
           participants: participantsRes.data, // Ajoute les participants au match
+          matchDetails: matchDetailsRes.data, // Ajoute les détails du match
         };
       })
     );
@@ -194,7 +212,7 @@ export async function getServerSideProps(context) {
         summoner,
         rankedStats,
         stats,
-        matchHistory: matchHistoryWithParticipants,
+        matchHistory: matchHistoryWithDetails,
       },
     };
   } catch (error) {

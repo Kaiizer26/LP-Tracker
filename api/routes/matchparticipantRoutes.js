@@ -31,20 +31,20 @@ router.get('/summoner-id/:summoner_id', async (req, res) => {
     }
 });
 
-// problème pr l'instant, récupère le match par participant_id
-// router.get('/match/participant_id/:participant_id/', async (req, res) => {
-//     try {
-//         const match = await Match.getMatchByMatchParticipantId(req.params.participant_id);
-//         if (match) {
-//             res.status(200).json(match);
-//         } else {
-//             res.status(404).json({ message: "Match not found for this participant." });
-//         }
-//     } catch (error) {
-//         console.error("Error fetching match by participant_id:", error);
-//         res.status(500).json({ error: error.message });
-//     }
-// });
+// problème pr l'instant, récupère le match par participant_id (c'est à dire le match d'un joueur)
+router.get('/match/participant_id/:participant_id/', async (req, res) => {
+    try {
+        const match = await MatchParticipant.getMatchByMatchParticipantId(req.params.participant_id);
+        if (match) {
+            res.status(200).json(match);
+        } else {
+            res.status(404).json({ message: "Match not found for this participant." });
+        }
+    } catch (error) {
+        console.error("Error fetching match by participant_id:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // en test, récupère tous les participants d'un match
 router.get('/match/:match_id/', async (req, res) => {
