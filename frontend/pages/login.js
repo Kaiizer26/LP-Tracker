@@ -1,7 +1,7 @@
 import '/src/app/globals.css';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -11,6 +11,14 @@ export default function Login() {
   const [errorMessage, setErrorMessage] = useState(''); // Message d'erreur
   const [successMessage, setSuccessMessage] = useState(''); // Message de succès
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Indicateur d'authentification
+
+  // Vérifie si l'utilisateur est déjà connecté au moment où la page se charge
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setIsAuthenticated(true); // Si un token existe, l'utilisateur est connecté
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,14 +44,17 @@ export default function Login() {
             setSuccessMessage(`Connexion réussie ! Bienvenue ${data.username}`); // Afficher le nom d'utilisateur
             setIsAuthenticated(true); // Utilisateur authentifié
 
+            // Stocker le token dans le localStorage
+            localStorage.setItem('authToken', data.token);
+
             // Rediriger après un délai de 3 secondes
-             setTimeout(() => {
-                 window.location.href = "/"; // Redirige vers la page d'accueil
-             }, 3000);
+            setTimeout(() => {
+                window.location.href = "/"; // Redirige vers la page d'accueil
+            }, 3000);
 
         } else {
             const errorData = await response.json();
-            setErrorMessage(errorData.error); // Afficher l'erreur retournée par l'API
+            setErrorMessage(errorData.error); 
             console.error('Erreur lors de la connexion:', errorData.error);
         }
     } catch (error) {
@@ -51,6 +62,8 @@ export default function Login() {
         setErrorMessage('Erreur de connexion au serveur. Veuillez réessayer plus tard.');
     }
 };
+
+
   return (
     <div className="text-white min-h-screen flex flex-col justify-center items-center" 
       style={{ 
@@ -109,9 +122,14 @@ export default function Login() {
             <button type="submit" className="w-full bg-blue-600 px-4 py-2 rounded-lg mt-4 text-white font-bold">Se connecter</button>
           </form>
           
-          <p className="text-gray-400 text-center mt-4">
-            Pas encore de compte ? <Link href="/register" className="text-blue-500">S'inscrire</Link>
-          </p>
+          {/* Affichage des boutons en fonction de l'état de connexion */}
+          {!isAuthenticated && (
+            <p className="text-gray-400 text-center mt-4">
+              Pas encore de compte ? <Link href="/register" className="text-blue-500">S'inscrire</Link>
+            </p>
+          )}
+          
+       
         </div>
       </div>
     </div>
