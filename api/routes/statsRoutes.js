@@ -11,6 +11,15 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.get('/summoner-id/:summoner_id', async (req, res) => {
+    try {
+        const stats = await Statistics.getStatsBySummonerId(req.params.summoner_id);
+        stats ? res.status(200).json(stats) : res.status(404).json({ message: "pas trouvé" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 // 📌 Obtenir un aperçu global des statistiques d'un joueur
 // router.get('/summoners/:region/:summonerName/stats/overview', async (req, res) => {
 //     try {

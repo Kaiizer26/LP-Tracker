@@ -20,6 +20,16 @@ class Statistics {
         return result.rows[0];
     }
 
+    static async getStatsBySummonerId(summoner_id) {
+        const result = await pool.query(
+            `SELECT * 
+             FROM stats 
+             WHERE summoner_id = $1`,
+            [summoner_id]
+        );
+        return result.rows[0]; 
+    }
+
     static async createStats({summoner_id, region, solo_rank, flex_rank, solo_wins, solo_losses, solo_remakes, flex_wins, flex_losses, flex_remakes, kills, deaths, assists}) {
         const result = await pool.query(
             'INSERT INTO stats (summoner_id, region, solo_rank, flex_rank, solo_wins, solo_losses, solo_remakes, flex_wins, flex_losses, flex_remakes, kills, deaths, assists) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *', [summoner_id, region, solo_rank, flex_rank, solo_wins, solo_losses, solo_remakes, flex_wins, flex_losses, flex_remakes, kills, deaths, assists]

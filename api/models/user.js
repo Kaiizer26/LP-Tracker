@@ -42,7 +42,7 @@ class User {
         return result.rows[0];
     }
 
-    // Suppression d'un invocateur
+    // Suppression d'un utilisateur
     static async deleteUser(user_id) {
         const result = await pool.query(
             'DELETE FROM users WHERE user_id = $1 RETURNING *',
