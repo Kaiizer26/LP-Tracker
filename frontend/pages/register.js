@@ -23,7 +23,7 @@ export default function Register() {
     setSuccess(null);  // Réinitialiser le succès avant la soumission
 
     try {
-      const response = await fetch('http://localhost:3002/users', {  // Vérifie le port de ton backend
+      const response = await fetch('http://localhost:3002/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,15 +34,40 @@ export default function Register() {
       if (response.ok) {
         const data = await response.json();
         console.log('Utilisateur créé', data);
-        setSuccess("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+
+        // Connexion automatique après inscription
+        const loginResponse = await fetch('http://localhost:3002/users/login', {  // Assure-toi de l'URL correcte
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: formData.email, password: formData.password }),
+        });
+
+        if (loginResponse.ok) {
+          const loginData = await loginResponse.json();
+          console.log('Utilisateur connecté', loginData);
+
+          // Stocker le token dans le localStorage
+          localStorage.setItem('authToken', loginData.token);
+
+          // Rediriger après un délai de 3 secondes
+          setSuccess("Inscription réussie ! Vous êtes automatiquement connecté. Vous allez être redirigé à l'accueil.");
+          setTimeout(() => {
+            window.location.href = "/"; // Redirige vers la page d'accueil
+          }, 3000);
+
+        } else {
+          const errorData = await loginResponse.json();
+          setError(errorData.error || "Une erreur s'est produite lors de la connexion.");
+        }
       } else {
         const errorData = await response.json();
-        console.error('Erreur lors de l\'inscription:', errorData.error);
-        setError(errorData.error || "Une erreur s'est produite lors de l'inscription.");  // Afficher l'erreur
+        setError(errorData.error || "Une erreur s'est produite lors de l'inscription.");
       }
     } catch (error) {
       console.error('Erreur de connexion à l\'API:', error);
-      setError("Erreur de connexion au serveur, veuillez réessayer.");  // Afficher un message générique d'erreur
+      setError("Erreur de connexion au serveur, veuillez réessayer.");
     }
   };
 
@@ -105,18 +130,11 @@ export default function Register() {
               />
             </div>
 
-            {/* Affichage du message d'erreur */}
             {error && <p className="text-red-500 text-center">{error}</p>}
-            
-            {/* Affichage du message de succès */}
             {success && <p className="text-green-500 text-center">{success}</p>}
             
             <button type="submit" className="w-full bg-red-500 px-4 py-2 rounded-lg mt-4 text-white font-bold">S'inscrire</button>
           </form>
-          
-          <p className="text-gray-400 text-center mt-4">
-            Déjà un compte ? <Link href="/login" className="text-blue-500">Se connecter</Link>
-          </p>
         </div>
       </div>
     </div>

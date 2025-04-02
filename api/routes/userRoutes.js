@@ -36,7 +36,7 @@ router.get('/user-id/:user_id', async (req, res) => {
     }
 });
 
-// CREATE a new user (inscription)
+// Route d'inscription
 router.post('/', async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -63,11 +63,18 @@ router.post('/', async (req, res) => {
             password: hashedPassword // Utiliser le mot de passe haché
         });
 
-        res.status(201).json(newUser); // Utilisateur créé avec succès
+        // Générer un token JWT pour l'utilisateur
+        const token = jwt.sign({ user_id: newUser.user_id, username: newUser.username }, 'secretKey', { expiresIn: '1h' });
+
+        // Retourner le token au frontend pour le connecter immédiatement après l'inscription
+        res.status(201).json({ token, message: "Utilisateur créé et connecté." });
+
     } catch (error) {
         res.status(500).json({ error: error.message }); // Gestion des erreurs
     }
 });
+
+
 // Modify user by ID (Update complete)
 router.put('/:user_id', async (req, res) => {
     try {
@@ -116,20 +123,20 @@ router.post('/login', async (req, res) => {
         // Vérifier si l'utilisateur existe
         const user = await User.getUserByEmail(email);
         if (!user) {
-            return res.status(400).json({ error: "Email ou mot de passe incorrect."  });
+            return res.status(400).json({ error: "Email ou mot de passe incorrect." });
         }
 
         // Vérifier si le mot de passe est correct
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return res.status(400).json({ error: "Email ou mot de passe incorrect." + isPasswordValid });
+            return res.status(400).json({ error: "Email ou mot de passe incorrect." });
         }
 
         // Générer un token JWT
         const token = jwt.sign({ user_id: user.user_id, username: user.username }, 'secretKey', { expiresIn: '1h' });
 
-        // Retourner le token au frontend
-        res.status(200).json({ token });
+        // Retourner le token et le username au frontend
+        res.status(200).json({ token, username: user.username });
 
     } catch (error) {
         console.error(error);

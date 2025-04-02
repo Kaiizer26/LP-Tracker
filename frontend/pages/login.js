@@ -22,33 +22,35 @@ export default function Login() {
     setSuccessMessage(''); // Réinitialiser le message de succès avant de soumettre
 
     try {
-      const response = await fetch('http://localhost:3002/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+        const response = await fetch('http://localhost:3002/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Connexion réussie', data);
-        setSuccessMessage('Connexion réussie ! Bienvenue ' + data.username);
-        setIsAuthenticated(true); // Utilisateur authentifié
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Connexion réussie', data);
+            setSuccessMessage(`Connexion réussie ! Bienvenue ${data.username}`); // Afficher le nom d'utilisateur
+            setIsAuthenticated(true); // Utilisateur authentifié
 
-        // Vous pouvez rediriger l'utilisateur vers une autre page après la connexion
-        // Exemple : window.location.href = '/home';
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.error); // Afficher l'erreur retournée par l'API
-        console.error('Erreur lors de la connexion:', errorData.error);
-      }
+            // Rediriger après un délai de 3 secondes
+             setTimeout(() => {
+                 window.location.href = "/"; // Redirige vers la page d'accueil
+             }, 3000);
+
+        } else {
+            const errorData = await response.json();
+            setErrorMessage(errorData.error); // Afficher l'erreur retournée par l'API
+            console.error('Erreur lors de la connexion:', errorData.error);
+        }
     } catch (error) {
-      console.error('Erreur de connexion à l\'API:', error);
-      setErrorMessage('Erreur de connexion au serveur. Veuillez réessayer plus tard.');
+        console.error('Erreur de connexion à l\'API:', error);
+        setErrorMessage('Erreur de connexion au serveur. Veuillez réessayer plus tard.');
     }
-  };
-
+};
   return (
     <div className="text-white min-h-screen flex flex-col justify-center items-center" 
       style={{ 
