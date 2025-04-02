@@ -20,7 +20,9 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
     >
       {/* Navbar */}
       <nav className="flex justify-between items-center p-6">
-        <Link href="/" className="text-2xl font-bold">LP-TRACKER</Link>
+        <Link href="/" className="text-2xl font-bold">
+          LP-TRACKER
+        </Link>
         <div>
           <Link href="/register">
             <button className="bg-red-500 px-4 py-2 rounded-lg">
@@ -63,10 +65,10 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Ranked Solo</h2>
             <p>
-              {rankedStats.rank} - {rankedStats.lp} LP
+              {stats.solo_rank} - {rankedStats.lp} LP
             </p>
             <p>
-              {rankedStats.wins}W {rankedStats.losses}L ({rankedStats.winrate}%
+              {stats.solo_wins}W {stats.solo_losses}L ({rankedStats.winrate}%
               Win Rate)
             </p>
           </div>
@@ -75,10 +77,10 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Résumé</h2>
             <p>
-              {rankedStats.winrate}% WR - {rankedStats.kda} KDA
+              {rankedStats.winrate} Pas encore % WR - {rankedStats.kda} KDA
             </p>
             <p>
-              Derniers 20 matchs: {rankedStats.avgKills} /{" "}
+              Derniers 20 matchs: Pas de fonction pr ça{rankedStats.avgKills} /{" "}
               {rankedStats.avgDeaths} / {rankedStats.avgAssists}
             </p>
           </div>
@@ -90,7 +92,6 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
           {Array.isArray(matchHistory) && matchHistory.length > 0 ? (
             matchHistory.map((match, index) => (
               <div key={index} className="mt-4 bg-gray-700 p-3 rounded-lg">
-                <h3 className="font-semibold">{match.result}</h3>
                 <div className="flex justify-between">
                   <p
                     className={
@@ -101,21 +102,17 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
                   >
                     {match.result}
                   </p>
-                  {match.lpChange && (
-                    <p className="text-green-400">{match.lpChange}</p>
-                  )}
+                  <p className="text-gray-400">{match.role}</p>
                 </div>
                 <p>
-                  {match.kda} - {match.kdaRatio} KDA
+                  {match.kills} / {match.deaths} / {match.assists} KDA
                 </p>
-                <p>Damage: {match.damage?.toLocaleString() || 0}</p>
+                <p>Damage: {match.gold_earned?.toLocaleString() || 0}</p>
+                <p>Match: {match.match_name}</p>
                 <div className="flex mt-2 space-x-2 overflow-x-auto">
-                  {Array.isArray(match.team) &&
-                    match.team.map((player, idx) => (
-                      <div key={idx} className="bg-gray-600 p-2 rounded">
-                        {player.name} - {player.kda}
-                      </div>
-                    ))}
+                  <div className="bg-gray-600 p-2 rounded">
+                    Team: {match.team_name} ({match.team_side})
+                  </div>
                 </div>
               </div>
             ))
