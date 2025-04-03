@@ -146,23 +146,23 @@ class Champion {
 
 
     // Création d'un champion
-    static async createChampion({ champion_name, role, lore, champion_image }) {
+    static async createChampion({ champion_name, lore, champion_image }) {
         const result = await pool.query(
-            `INSERT INTO Champion (champion_name, role, lore, champion_image) 
-             VALUES ($1, $2, $3, $4) RETURNING *`,
-            [champion_name, role, lore, champion_image]
+            `INSERT INTO Champion (champion_name, champion_image, lore) 
+             VALUES ($1, $2, $3) RETURNING *`,
+            [champion_name, champion_image, lore]
         );
         return result.rows[0];
     }
 
     // Mise à jour d'un champion
-    static async updateChampion(champion_id, { champion_name, role, lore, champion_image }) {
+    static async updateChampion(champion_id, { champion_name, champion_image, lore }) {
         const result = await pool.query(
             `UPDATE Champion 
-             SET champion_name = $1, role = $2, lore = $3, champion_image = $4, updated_at = CURRENT_TIMESTAMP
-             WHERE champion_id = $5 
+             SET champion_name = $1, champion_image = $2, lore = $3 updated_at = CURRENT_TIMESTAMP
+             WHERE champion_id = $4
              RETURNING *`,
-            [champion_name, role, lore, champion_image, champion_id]
+            [champion_name, champion_image, lore, champion_id]
         );
         return result.rows[0];
     }

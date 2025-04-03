@@ -76,20 +76,19 @@ class Summoner {
         return result.rows[0];
     }
 
-    static async createSummoner({ summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp }) {
+    static async createSummoner({ summoner_name, region, summoner_level, summoner_icon_id, puuid }) {
         const result = await pool.query(
-            'INSERT INTO summoners (summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [summoner_name, region, summoner_level, profile_icon_id, puuid, ranked_division, lp]
+            'INSERT INTO summoners (summoner_name, region, summoner_level, summoner_icon_id, puuid) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [summoner_name, region, summoner_level, summoner_icon_id, puuid]
         );
         return result.rows[0];
     }
-    static async updateSummoner(summoner_id, { summoner_name, puuid, region, summoner_level, profile_icon_id, ranked_division, lp }) {
+    static async updateSummoner(summoner_id, { summoner_name, region, summoner_level, summoner_icon_id, puuid}) {
         const result = await pool.query(
             `UPDATE summoners 
-             SET summoner_name = $1, puuid = $2, region = $3, profile_icon_id = $4, summoner_level = $5, ranked_division = $6, lp = $7 
-             WHERE summoner_id = $8 
+             SET summoner_name = $1, region = $2, summoner_level = $3, summoner_icon_id = $4, puuid = $5 WHERE summoner_id = $8 
              RETURNING *`,
-            [summoner_name, puuid, region, profile_icon_id, summoner_level, ranked_division, lp, summoner_id]
+            [summoner_name, region, summoner_level, summoner_icon_id, puuid, summoner_id]
         );
         return result.rows[0];
     }

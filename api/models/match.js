@@ -32,19 +32,19 @@ class Match {
         return result.rows[0];
     }
 
-    static async createMatch({ match_name, game_duration, start_time, result, game_type, winning_team_side }) {
+    static async createMatch({ game_duration, start_time, game_type, winning_team_side }) {
         const results = await pool.query(
-            'INSERT INTO matches (match_name, game_duration, start_time, result, game_type, winning_team_side) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [match_name, game_duration, start_time, result, game_type, winning_team_side]
+            'INSERT INTO matches (game_duration, start_time, game_type, winning_team_side) VALUES ($1, $2, $3, $4) RETURNING *',
+            [game_duration, start_time, game_type, winning_team_side]
         );
         
         return results.rows[0];
     }
 
-    static async updateMatch(match_id, { match_name, game_duration, start_time, end_time, result, game_type, winning_team_side }) {
+    static async updateMatch(match_id, {game_duration, start_time, game_type, winning_team_side }) {
         const results = await pool.query(
-            'UPDATE matches SET match_name = $1, game_duration = $2, start_time = $3, end_time = $4, result = $5, game_type = $6, winning_team_side = $7 WHERE match_id = $8 RETURNING *',
-            [match_name, game_duration, start_time, end_time, result, game_type, winning_team_side, match_id]
+            'UPDATE matches SET game_duration = $1, start_time = $2, game_type = $3, winning_team_side = $4 WHERE match_id = $5 RETURNING *',
+            [game_duration, start_time, game_type, winning_team_side, match_id]
         );
         return results.rows[0];
     }

@@ -24,19 +24,19 @@ class Rune {
     }
 
     // Créer une nouvelle rune
-    static async createRune({ rune_name, description }) {
+    static async createRune({ rune_name, rune_image, description }) {
         const result = await pool.query(
-            'INSERT INTO rune (rune_name, description) VALUES ($1, $2) RETURNING *',
-            [rune_name, description]
+            'INSERT INTO rune (rune_name, rune_image, description) VALUES ($1, $2, $3) RETURNING *',
+            [rune_name, rune_image, description]
         );
         return result.rows[0];
     }
 
     // Mettre à jour une rune existante
-    static async updateRune(rune_id, { rune_name, description }) {
+    static async updateRune(rune_id, { rune_name, rune_image,  description }) {
         const result = await pool.query(
-            'UPDATE rune SET rune_name = $1, description = $2, updated_at = CURRENT_TIMESTAMP WHERE rune_id = $3 RETURNING *',
-            [rune_name, description, rune_id]
+            'UPDATE rune SET rune_name = $1, rune_image= $2, description = $3, updated_at = CURRENT_TIMESTAMP WHERE rune_id = $4 RETURNING *',
+            [rune_name, rune_image, description, rune_id]
         );
         return result.rows[0];
     }

@@ -20,16 +20,16 @@ class Item {
         return result.rows[0]
     }
 
-    static async createItem({item_name, description, price}){
+    static async createItem({item_name, item_image, item_description, price}){
         const result = await pool.query(
-            'INSERT INTO items (item_name, description, price) VALUES ($1, $2, $3) RETURNING *', [item_name, description, price]
+            'INSERT INTO items (item_name, item_image, item_description, price) VALUES ($1, $2, $3, $4) RETURNING *', [item_name, item_image, item_description, price]
         )
     return result.rows[0];
     }
 
-    static async updateItem(item_id, {item_name, description, price}){
+    static async updateItem(item_id, {item_name, item_image, item_description, price}){
         const result = await pool.query(
-            'UPDATE items SET item_name = $1, description = $2, price = $3 WHERE item_id = $4 RETURNING *', [item_name, description, price, item_id]
+            'UPDATE items SET item_name = $1, item_image = $2, item_description = $3, price = $4 WHERE item_id = $5 RETURNING *', [item_name, item_image, item_description, price, item_id]
         )
     }
 

@@ -39,19 +39,19 @@ class ChampionMastery {
         return result.rows[0];
     }
 
-    static async createChampionMastery({ summoner_id, champion_id, mastery_level, mastery_points}) {
+    static async createChampionMastery({ summoner_id, champion_id, mastery_level, mastery_points, number_of_games, kills, deaths, assists, kda, wins, losses, winrate, lp }) {
         const results = await pool.query(
-            'INSERT INTO champion_mastery (summoner_id, champion_id, mastery_level, mastery_points) VALUES ($1, $2, $3, $4) RETURNING *',
-            [summoner_id, champion_id, mastery_level, mastery_points]
+            'INSERT INTO champion_mastery (summoner_id, champion_id, mastery_level, mastery_points, number_of_games, kills, deaths, assists, kda, wins, losses, winrate, lp) VALUES ($1, $2, $3, $4) RETURNING *',
+            [summoner_id, champion_id, mastery_level, mastery_points, number_of_games, kills, deaths, assists, kda, wins, losses, winrate, lp]
         );
         
         return results.rows[0];
     }
 
-    static async updateChampionMastery(champion_mastery_id, { summoner_id, champion_id, mastery_level, mastery_points }) {
+    static async updateChampionMastery(champion_mastery_id, { summoner_id, champion_id, mastery_level, mastery_points, number_of_games, kills, deaths, assists, kda, wins, losses, winrate, lp }) {
         const results = await pool.query(
-            'UPDATE champion_mastery SET summoner_id = $1, champion_id = $2, mastery_level = $3, mastery_points = $4 WHERE champion_mastery_id = $5 RETURNING *',
-            [summoner_id, champion_id, mastery_level, mastery_points, champion_mastery_id]
+            'UPDATE champion_mastery SET summoner_id =$1, champion_id = $2, mastery_level = $3, mastery_points = $4, number_of_games =$5, kills =$6, deaths =$7, assists =$8, kda =$9, wins =$10, losses =$11, winrate =$12, lp =$13 WHERE champion_mastery_id = $14 RETURNING *',
+            [summoner_id, champion_id, mastery_level, mastery_points, number_of_games, kills, deaths, assists, kda, wins, losses, winrate, lp, champion_mastery_id]
         );
         return results.rows[0];
     }

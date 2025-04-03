@@ -3,7 +3,7 @@ import Image from "next/image";
 import axios from "axios";
 import "/src/app/globals.css";
 
-const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
+const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
   if (error) {
     return <div className="text-red-500 p-4">Erreur : {error}</div>;
   }
@@ -65,10 +65,10 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Ranked Solo</h2>
             <p>
-              {stats.solo_rank} - {rankedStats.lp} LP
+              {stats.solo_ranked_division} - {stats.solo_lp} LP
             </p>
             <p>
-              {stats.solo_wins}W {stats.solo_losses}L ({rankedStats.winrate}%
+              {stats.solo_wins}W {stats.solo_losses}L ({stats.winrate}%
               Win Rate)
             </p>
           </div>
@@ -77,11 +77,11 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Résumé</h2>
             <p>
-              {rankedStats.winrate} Pas encore % WR - {rankedStats.kda} KDA
+              {stats.winrate} Pas encore % WR - {stats.kda} KDA
             </p>
             <p>
-              Derniers 20 matchs: Pas de fonction pr ça{rankedStats.avgKills} /{" "}
-              {rankedStats.avgDeaths} / {rankedStats.avgAssists}
+              {/* Derniers 20 matchs: Pas de fonction pr ça{rankedStats.avgKills} /{" "}
+              {sta.avgDeaths} / {rankedStats.avgAssists} */}
             </p>
           </div>
         </div>
@@ -100,19 +100,19 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
                         : "text-red-400"
                     }
                   >
-                    {match.result}
+                    {match.winning_team_side}
                   </p>
                   <p className="text-gray-400">{match.role}</p>
                 </div>
                 <p>
                   {match.kills} / {match.deaths} / {match.assists} KDA
                 </p>
-                <p>Damage: {match.gold_earned?.toLocaleString() || 0}</p>
+                <p>CS: {match.cs?.toLocaleString() || 0}</p>
                 <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
                 <p>Match: {match.match_name}</p>
                 <div className="flex mt-2 space-x-2 overflow-x-auto">
                   <div className="bg-gray-600 p-2 rounded">
-                    Team: {match.team_name} ({match.team_side})
+                    Team: ({match.team_side})
                   </div>
                 </div>
                 {/* Détails du match */}
@@ -168,10 +168,10 @@ export async function getServerSideProps(context) {
     const summoner = summonerRes.data;
 
     // Récupérer les statistiques classées
-    const rankedRes = await axios.get(
-      `http://localhost:3000/summoners/summoner-id/${summoner_id}/ranked`
-    );
-    const rankedStats = rankedRes.data;
+    // const rankedRes = await axios.get(
+    //   `http://localhost:3000/summoners/summoner-id/${summoner_id}/ranked`
+    // );
+    // const rankedStats = rankedRes.data;
 
     // Récupérer les statistiques globales
     const statsRes = await axios.get(
@@ -210,7 +210,6 @@ export async function getServerSideProps(context) {
     return {
       props: {
         summoner,
-        rankedStats,
         stats,
         matchHistory: matchHistoryWithDetails,
       },
