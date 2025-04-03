@@ -2,6 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
 import "/src/app/globals.css";
+import championMapping from "/data/championMapping.json";
+
+// Fonction pour normaliser le nom du champion
+const formatChampionName = (name) => {
+  if (!name) return "default"; // Retourne une image par défaut si le nom est absent
+  return name.toLowerCase().replace(/[^a-z0-9]/g, ""); // Supprime les caractères spéciaux
+};
 
 // Fonction pour supprimer les espaces dans une chaîne
 function removeSpaces(str) {
@@ -114,6 +121,35 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                   Win Rate)
                 </p>
               </div>
+            </div>
+
+            <div className="bg-gray-800 p-4 rounded-lg shadow-md mt-4">
+              <h2 className="text-lg font-semibold">Champion Stats</h2>
+              {Array.isArray(stats.champion_masteries) && stats.champion_masteries.length > 0 ? (
+                stats.champion_masteries.map((champion, index) => (
+                  <div key={index} className="flex items-center justify-between mt-4 bg-gray-700 p-3 rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      <Image
+                        src={`/img/champion/${championMapping[champion.champion_id] || "default"}.png`}
+                        alt={`${championMapping[champion.champion_id] || "Default"} Icon`}
+                        width={48}
+                        height={48}
+                        className="rounded"
+                      />
+                      <div>
+                        <h3 className="text-md font-semibold">{champion.champion_name}</h3>
+                        <p className="text-gray-400">{champion.number_of_games} games</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-blue-400">{champion.kda} KDA</p>
+                      <p className="text-gray-400">{champion.winrate}% Win Rate</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400">Aucune statistique de champion disponible.</p>
+              )}
             </div>
           </div>
 
@@ -238,6 +274,15 @@ export async function getServerSideProps(context) {
       `http://localhost:3000/stats/summoner-id/${summoner_id}`
     );
     const stats = statsRes.data;
+
+    // Récupérer les champion masteries
+    const championMasteriesRes = await axios.get(
+      `http://localhost:3000/championmastery/summoner/${summoner_id}`
+    );
+    const championMasteries = championMasteriesRes.data;
+
+    // Ajoutez les champion masteries aux stats
+    stats.champion_masteries = championMasteries;
 
     // Récupérer l'historique des matchs
     const matchHistoryRes = await axios.get(
