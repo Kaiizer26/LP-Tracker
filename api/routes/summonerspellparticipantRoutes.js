@@ -23,6 +23,18 @@ router.get('/:summoner_spell_participant_id', async (req, res) => {
     }
 });
 
+router.get('/names/:summoner_spell_participant_id', async (req, res) => {
+    try {
+        const summonerSpellNames = await SummonerSpellParticipant.getSummonerSpellNamesByParticipantId(
+            req.params.summoner_spell_participant_id
+        );
+        summonerSpellNames
+            ? res.status(200).json(summonerSpellNames)
+            : res.status(404).json({ message: "Summoner spells not found" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 router.post('/', async (req, res) => {
     try {
         const newSummonerSpellParticipant = await SummonerSpellParticipant.createSummonerSpellParticipant(req.body);
