@@ -184,11 +184,9 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                             : "text-red-400"
                         }
                       >
-                        
                         {match.team_side === match.winning_team_side
                           ? "Win"
                           : "Lose"}
-                        
                       </p>
                       <p className="text-gray-400">{match.role}</p>
                     </div>
@@ -228,20 +226,38 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         height={64}
                         className="rounded-full"
                       />
-                      {/* <Image
-                        src={`/img/spell/Summoner${match.summoner_spells[0]}.png`} // URL statique pour l'image de profil
-                        alt="Icone de profil"
-                        width={48}
-                        height={48}
-                        className=" border-2 border-gray-600"
-                      />
+                      <div className="flex space-x-2 mt-2">
+                        {/* Affichage des summoner spells */}
+                        <Image
+                          src={`/img/spell/Summoner${match.summoner_spells.summoner_spell1_name}.png`}
+                          alt={`Summoner Spell 1`}
+                          width={32}
+                          height={32}
+                          className="rounded border-2 border-gray-600"
+                        />
+                        <Image
+                          src={`/img/spell/Summoner${match.summoner_spells.summoner_spell2_name}.png`}
+                          alt={`Summoner Spell 2`}
+                          width={32}
+                          height={32}
+                          className="rounded border-2 border-gray-600"
+                        />
+                      </div>
                       <Image
-                        src={`/img/spell/Summoner${match.summoner_spells[1]}.png`} // URL statique pour l'image de profil
-                        alt="Icone de profil"
-                        width={48}
-                        height={48}
-                        className=" border-2 border-gray-600"
-                      /> */}
+                          src={`/img/rune/Styles/${match.runes.primary_rune_name}.png`}
+                          alt={`Rune primaire`}
+                          width={32}
+                          height={32}
+                          className="rounded border-2 border-gray-600"
+                        />
+                        <Image
+                          src={`/img/rune/Styles/${match.runes.secondary_rune_name}.png`}
+                          alt={`Rune secondaire`}
+                          width={32}
+                          height={32}
+                          className="rounded border-2 border-gray-600"
+                        />
+                        <p>{match.runes.secondary_rune_name}</p>
                       <p className="text-md font-semibold">
                         {match.champion.champion_name}
                       </p>
@@ -269,7 +285,8 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                               <span>{participant.summoner_name}</span>
                             </div>
                             <span>
-                              {participant.kills} / {participant.deaths} / {participant.assists}
+                              {participant.kills} / {participant.deaths} /{" "}
+                              {participant.assists}
                             </span>
                             {/* <span>{participant.kda} KDA</span> */}
                           </div>
@@ -340,11 +357,23 @@ export async function getServerSideProps(context) {
           `http://localhost:3000/champion/participant/${match.participant_id}`
         );
 
+        // Récupérer les noms des summoner spells via summoner_spell_participant_id
+        const summonerSpellsRes = await axios.get(
+          `http://localhost:3000/summonerspellparticipant/names/${match.summoner_spell_participant_id}`
+        );
+
+        // Récupérer les noms des runes via rune_participant_id
+        const runeNamesRes = await axios.get(
+          `http://localhost:3000/runeparticipant/names/${match.rune_participant_id}`
+        );
+
         return {
           ...match,
           participants: participantsRes.data, // Ajoute les participants au match
           matchDetails: matchDetailsRes.data, // Ajoute les détails du match
           champion: championRes.data, // Ajoute les informations du champion
+          runes: runeNamesRes.data, // Ajoute les noms des runes
+          summoner_spells: summonerSpellsRes.data, // Ajoute les noms des summoner spells
         };
       })
     );

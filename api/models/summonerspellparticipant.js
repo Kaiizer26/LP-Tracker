@@ -28,6 +28,7 @@ class SummonerSpellParticipant {
         return result.rows[0];
     }
     
+    
     static async getSummonerSpellParticipantById(summoner_spell_participant_id) {
         const result = await pool.query('SELECT * FROM summoner_spells_participants WHERE summoner_spell_participant_id = $1', [summoner_spell_participant_id]);
         return result.rows[0];
@@ -41,7 +42,20 @@ class SummonerSpellParticipant {
         return result.rows[0];
     }
 
-    
+    static async getSummonerSpellNamesByParticipantId(summoner_spell_participant_id) {
+        const result = await pool.query(
+            `SELECT 
+                s1.spell_name AS summoner_spell1_name,
+                s2.spell_name AS summoner_spell2_name
+             FROM summoner_spells_participants ssp
+             INNER JOIN spells s1 ON ssp.summoner_spell1_id = s1.spell_id
+             INNER JOIN spells s2 ON ssp.summoner_spell2_id = s2.spell_id
+             WHERE ssp.summoner_spell_participant_id = $1`,
+            [summoner_spell_participant_id]
+        );
+        return result.rows[0]; // Retourne les noms des deux summoner spells
+    }
+
     static async deleteSummonerSpellParticipant(summoner_spell_participant_id) {
         await pool.query('DELETE FROM summoner_spells_participants WHERE summoner_spell_participant_id = $1', [summoner_spell_participant_id]);
     }
