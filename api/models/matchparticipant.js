@@ -85,21 +85,21 @@ class MatchParticipant {
         await pool.query('DELETE FROM match_participants WHERE participant_id = $1', [participant_id]);
     }
 
-    static async calculateKDABySummonerId(summoner_id) {
+    static async calculateKDAByParticipantId(participant_id) {
         const result = await pool.query(
             `SELECT 
-                SUM(mp.kills) AS total_kills,
-                SUM(mp.deaths) AS total_deaths,
-                SUM(mp.assists) AS total_assists,
+                mp.kills AS total_kills,
+                mp.deaths AS total_deaths,
+                mp.assists AS total_assists,
                 CASE 
-                    WHEN SUM(mp.deaths) = 0 THEN NULL 
-                    ELSE ROUND((SUM(mp.kills) + SUM(mp.assists))::DECIMAL / SUM(mp.deaths), 2) 
+                    WHEN mp.deaths = 0 THEN NULL 
+                    ELSE ROUND((mp.kills + mp.assists)::DECIMAL / mp.deaths, 2) 
                 END AS kda
              FROM match_participants mp
-             WHERE mp.summoner_id = $1`,
-            [summoner_id]
+             WHERE mp.participant_id = $1`,
+            [participant_id]
         );
-        return result.rows[0]; // Retourne le KDA total
+        return result.rows[0]; // Retourne le KDA pour un participant spécifique
     }
 }
 

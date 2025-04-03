@@ -3,7 +3,7 @@ import Image from "next/image";
 import axios from "axios";
 import "/src/app/globals.css";
 
-const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
+const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, kda, error }) => {
   if (error) {
     return <div className="text-red-500 p-4">Erreur : {error}</div>;
   }
@@ -77,11 +77,10 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
           <div className="bg-gray-800 p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold">Résumé</h2>
             <p>
-              {rankedStats.winrate} Pas encore % WR - {rankedStats.kda} KDA
+              {rankedStats.winrate}% WR - {kda.kda} KDA
             </p>
             <p>
-              Derniers 20 matchs: Pas de fonction pr ça{rankedStats.avgKills} /{" "}
-              {rankedStats.avgDeaths} / {rankedStats.avgAssists}
+              Derniers 20 matchs: {rankedStats.avgKills} / {rankedStats.avgDeaths} / {rankedStats.avgAssists}
             </p>
           </div>
         </div>
@@ -105,7 +104,7 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
                   <p className="text-gray-400">{match.role}</p>
                 </div>
                 <p>
-                  {match.kills} / {match.deaths} / {match.assists} KDA
+                  {match.kills} / {match.deaths} / {match.assists} KDA ({match.kda} KDA)
                 </p>
                 <p>Damage: {match.damage?.toLocaleString() || 0}</p>
                 <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
@@ -146,7 +145,6 @@ const ProfilePage = ({ summoner, rankedStats, stats, matchHistory, error }) => {
   );
 };
 
-
 export async function getServerSideProps(context) {
   const { summoner_id } = context.params;
 
@@ -181,12 +179,25 @@ export async function getServerSideProps(context) {
         const participantsRes = await axios.get(
           `http://localhost:3002/matchparticipant/match/${match.match_id}/`
         );
+
+        // Récupérer le KDA pour ce participant
+        const kdaRes = await axios.get(
+          `http://localhost:3002/matchparticipant/participant-id/${match.participant_id}/kda`
+        );
+
         return {
           ...match,
           participants: participantsRes.data, // Ajoute les participants au match
+          kda: kdaRes.data.kda, // Ajoute le KDA pour ce match
         };
       })
     );
+
+    // Récupérer le KDA global
+    const kdaRes = await axios.get(
+      `http://localhost:3002/matchparticipant/summoner-id/${summoner_id}/kda`
+    );
+    const kda = kdaRes.data;
 
     // Retourner les données comme props
     return {
@@ -195,6 +206,7 @@ export async function getServerSideProps(context) {
         rankedStats,
         stats,
         matchHistory: matchHistoryWithParticipants,
+        kda, // Ajoutez le KDA global ici
       },
     };
   } catch (error) {

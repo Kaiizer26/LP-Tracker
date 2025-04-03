@@ -49,17 +49,16 @@ class Statistics {
 
     static async calculateKDAByStats(summoner_id) {
         const result = await pool.query(
-            `SELECT * from stats WHERE summoner_id = $1`,
-            // `SELECT 
-            //     SUM(s.kills) AS total_kills,
-            //     SUM(s.deaths) AS total_deaths,
-            //     SUM(s.assists) AS total_assists,
-            //     CASE 
-            //         WHEN SUM(s.deaths) = 0 THEN NULL 
-            //         ELSE ROUND((SUM(s.kills) + SUM(s.assists))::DECIMAL / SUM(s.deaths), 2) 
-            //     END AS kda
-            //  FROM stats s
-            //  WHERE s.summoner_id = $1`,
+            `SELECT 
+                SUM(s.kills) AS total_kills,
+                SUM(s.deaths) AS total_deaths,
+                SUM(s.assists) AS total_assists,
+                CASE 
+                    WHEN SUM(s.deaths) = 0 THEN NULL 
+                    ELSE ROUND((SUM(s.kills) + SUM(s.assists))::DECIMAL / SUM(s.deaths), 2) 
+                END AS kda
+             FROM stats s
+             WHERE s.summoner_id = $1`,
             [summoner_id]
         );
         return result.rows[0]; // Retourne le KDA global

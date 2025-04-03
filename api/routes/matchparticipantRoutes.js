@@ -31,10 +31,14 @@ router.get('/summoner-id/:summoner_id', async (req, res) => {
     }
 });
 //  Obtenir le KDA d'un joueur par son summoner_id
-router.get('/summoner-id/:summoner_id/kda', async (req, res) => {
+router.get('/participant-id/:participant_id/kda', async (req, res) => {
     try {
-        const kda = await MatchParticipant.calculateKDABySummonerId(req.params.summoner_id);
-        kda ? res.status(200).json(kda) : res.status(404).json({ message: "KDA non trouvé pour ce joueur." });
+        const kda = await MatchParticipant.calculateKDAByParticipantId(req.params.participant_id);
+        if (kda) {
+            res.status(200).json(kda);
+        } else {
+            res.status(404).json({ message: "KDA non trouvé pour ce participant." });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
