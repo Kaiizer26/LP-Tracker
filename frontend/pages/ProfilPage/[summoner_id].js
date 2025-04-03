@@ -228,7 +228,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         height={64}
                         className="rounded-full"
                       />
-                      <Image
+                      {/* <Image
                         src={`/img/spell/Summoner${match.summoner_spells[0]}.png`} // URL statique pour l'image de profil
                         alt="Icone de profil"
                         width={48}
@@ -241,7 +241,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         width={48}
                         height={48}
                         className=" border-2 border-gray-600"
-                      />
+                      /> */}
                       <p className="text-md font-semibold">
                         {match.champion.champion_name}
                       </p>
@@ -269,9 +269,9 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                               <span>{participant.summoner_name}</span>
                             </div>
                             <span>
-                              {participant.kills} / {participant.deaths} /{" "}
-                              {participant.assists} KDA
+                              {participant.kills} / {participant.deaths} / {participant.assists}
                             </span>
+                            {/* <span>{participant.kda} KDA</span> */}
                           </div>
                         ))}
                       </div>
