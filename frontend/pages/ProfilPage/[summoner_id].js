@@ -158,10 +158,9 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     </div>
                     {/* Informations du champion */}
                     <div className="mt-4">
-                      {/* <img src="{match.champion.champion_image}"> */}
                       <Image
-                        src="/{match.champion.champion_image}" // URL statique pour l'image de profil
-                        alt="Icone de profil"
+                        src={`/img/champion/${match.champion.champion_name.toLowerCase()}.png`} // Chemin basé sur le nom du champion
+                        alt={`${match.champion.name} Icon`}
                         width={64}
                         height={64}
                         className="rounded-full"
