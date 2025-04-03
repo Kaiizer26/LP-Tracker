@@ -174,15 +174,18 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         {match.participants.map((participant, idx) => (
                           <div
                             key={idx}
-                            className="bg-gray-600 p-2 rounded flex justify-between"
+                            className="bg-gray-600 p-2 rounded flex items-center justify-between"
                           >
-                            <span>{participant.summoner_name}</span>
+                            <div className="flex items-center space-x-2">
+                              
+                              <span>{participant.summoner_name}</span>
+                            </div>
                             <span>
                               {participant.kills} / {participant.deaths} /{" "}
                               {participant.assists} KDA
                             </span>
                           </div>
-                        ))} 
+                        ))}
                       </div>
                     </div>
                   </div>
