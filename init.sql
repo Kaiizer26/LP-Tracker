@@ -43,6 +43,45 @@ CREATE TABLE matches (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- Date de mise à jour
 );
 
+CREATE TABLE items (
+    item_id SERIAL PRIMARY KEY,
+    item_name VARCHAR(255) UNIQUE NOT NULL,
+    item_image VARCHAR(255) NOT NULL,
+    item_description TEXT NOT NULL,
+    description TEXT NOT NULL,
+    price INT NOT NULL CHECK (price >= 0),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE rune (
+    rune_id SERIAL PRIMARY KEY,
+    rune_name VARCHAR(255) UNIQUE NOT NULL,
+    rune_image VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE spell (
+    spell_id SERIAL PRIMARY KEY,
+    spell_name VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT NOT NULL,
+    spell_image VARCHAR(255) NOT NULL,
+    champion_id INT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (champion_id) REFERENCES champion(champion_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- Table des équipes
+CREATE TABLE teams (
+    team_id SERIAL PRIMARY KEY,
+    match_id BIGINT NOT NULL,
+    team_side VARCHAR(10) NOT NULL CHECK (team_side IN ('Blue', 'Red')), -- Blue ou Red
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE
+);
 -- Table des participants aux matchs
 CREATE TABLE match_participants (
     participant_id SERIAL PRIMARY KEY,
@@ -64,14 +103,7 @@ CREATE TABLE match_participants (
     FOREIGN KEY (team_id) REFERENCES teams(team_id) ON DELETE CASCADE
 );
 
--- Table des équipes
-CREATE TABLE teams (
-    team_id SERIAL PRIMARY KEY,
-    match_id BIGINT NOT NULL,
-    team_side VARCHAR(10) NOT NULL CHECK (team_side IN ('Blue', 'Red')), -- Blue ou Red
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (match_id) REFERENCES matches(match_id) ON DELETE CASCADE
-);
+
 
 -- Table de maîtrise des champions
 CREATE TABLE champion_mastery (
@@ -119,36 +151,8 @@ CREATE TABLE stats (
     FOREIGN KEY (summoner_id) REFERENCES summoners(summoner_id) ON DELETE CASCADE
 );
 
-CREATE TABLE items (
-    item_id SERIAL PRIMARY KEY,
-    item_name VARCHAR(255) UNIQUE NOT NULL,
-    item_image VARCHAR(255) NOT NULL,
-    item_description TEXT NOT NULL,
-    description TEXT NOT NULL,
-    price INT NOT NULL CHECK (price >= 0),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
 
-CREATE TABLE rune (
-    rune_id SERIAL PRIMARY KEY,
-    rune_name VARCHAR(255) UNIQUE NOT NULL,
-    rune_image VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
 
-CREATE TABLE spell (
-    spell_id SERIAL PRIMARY KEY,
-    spell_name VARCHAR(255) UNIQUE NOT NULL,
-    description TEXT NOT NULL,
-    spell_image VARCHAR(255) NOT NULL,
-    champion_id INT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (champion_id) REFERENCES champion(champion_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_username ON users(username);
