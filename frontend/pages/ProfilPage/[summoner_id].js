@@ -68,8 +68,8 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
               {stats.solo_ranked_division} - {stats.solo_lp} LP
             </p>
             <p>
-              {stats.solo_wins}W {stats.solo_losses}L ({stats.winrate}%
-              Win Rate)
+              {stats.solo_wins}W {stats.solo_losses}L ({stats.winrate}% Win
+              Rate)
             </p>
           </div>
 
@@ -105,11 +105,12 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                   <p className="text-gray-400">{match.role}</p>
                 </div>
                 <p>
-                  {match.kills} / {match.deaths} / {match.assists} KDA
+                  {match.kills} / {match.deaths} / {match.assists}
                 </p>
+                <p>{match.kda} KDA</p>
                 <p>CS: {match.cs?.toLocaleString() || 0}</p>
                 <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
-                <p>Lp: {match.profit?.toLocaleString() || 0}</p>
+                <p>{match.profit?.toLocaleString() || 0} LP</p>
                 <p>Match: {match.match_name}</p>
                 <div className="flex mt-2 space-x-2 overflow-x-auto">
                   <div className="bg-gray-600 p-2 rounded">
@@ -145,6 +146,17 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     ))}
                   </div>
                 </div>
+                {/* Informations du champion */}
+                <div className="mt-4">
+                  {/* <img src="{match.champion.champion_image}"> */}
+                  <Image
+            src="/{match.champion.champion_image}" // URL statique pour l'image de profil
+            alt="Icone de profil"
+            width={64}
+            height={64}
+            className="rounded-full"
+          />
+                </div>
               </div>
             ))
           ) : (
@@ -168,12 +180,6 @@ export async function getServerSideProps(context) {
     );
     const summoner = summonerRes.data;
 
-    // Récupérer les statistiques classées
-    // const rankedRes = await axios.get(
-    //   `http://localhost:3000/summoners/summoner-id/${summoner_id}/ranked`
-    // );
-    // const rankedStats = rankedRes.data;
-
     // Récupérer les statistiques globales
     const statsRes = await axios.get(
       `http://localhost:3000/stats/summoner-id/${summoner_id}`
@@ -186,7 +192,7 @@ export async function getServerSideProps(context) {
     );
     const matchHistory = matchHistoryRes.data;
 
-    // Récupérer les participants et les détails du match pour chaque match
+    // Récupérer les participants, les détails du match et les informations du champion pour chaque match
     const matchHistoryWithDetails = await Promise.all(
       matchHistory.map(async (match) => {
         // Récupérer les participants du match
@@ -199,10 +205,16 @@ export async function getServerSideProps(context) {
           `http://localhost:3000/matchparticipant/match/participant_id/${match.participant_id}`
         );
 
+        // Récupérer les informations du champion via participant_id
+        const championRes = await axios.get(
+          `http://localhost:3000/champion/participant/${match.participant_id}`
+        );
+
         return {
           ...match,
           participants: participantsRes.data, // Ajoute les participants au match
           matchDetails: matchDetailsRes.data, // Ajoute les détails du match
+          champion: championRes.data, // Ajoute les informations du champion
         };
       })
     );
