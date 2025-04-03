@@ -137,8 +137,10 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                       <p className="text-gray-400">{match.role}</p>
                     </div>
                     <p>
-                      {match.kills} / {match.deaths} / {match.assists} KDA
+                      {match.kills} / {match.deaths} / {match.assists}
                     </p>
+                    <p className="text-gray-400">
+                    {match.kda} KDA</p>
                     <p>CS: {match.cs?.toLocaleString() || 0}</p>
                     <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
                     <p>Lp: {match.profit?.toLocaleString() || 0}</p>
