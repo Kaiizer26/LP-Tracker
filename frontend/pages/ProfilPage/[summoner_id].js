@@ -172,125 +172,157 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
           {/* Colonne droite : Historique des matchs */}
           <div className="col-span-1 md:col-span-2">
             <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-              <h2 className="text-lg font-semibold">Match History</h2>
+              <h2 className="text-lg font-semibold mb-4">Match History</h2>
               {Array.isArray(matchHistory) && matchHistory.length > 0 ? (
                 matchHistory.map((match, index) => (
-                  <div key={index} className="mt-4 bg-gray-700 p-3 rounded-lg">
-                    <div className="flex justify-between">
-                      <p
-                        className={
-                          match.team_side === match.winning_team_side
-                            ? "text-blue-400"
-                            : "text-red-400"
-                        }
-                      >
-                        {match.team_side === match.winning_team_side
-                          ? "Win"
-                          : "Lose"}
-                      </p>
-                      <p className="text-gray-400">{match.role}</p>
-                    </div>
-                    <p>
-                      {match.kills} / {match.deaths} / {match.assists}
-                    </p>
-                    <p className="text-gray-400">{match.kda} KDA</p>
-                    <p>{match.cs?.toLocaleString() || 0} CS</p>
-                    <p>{match.gold_earned?.toLocaleString() || 0} Gold</p>
-                    <p>Lp: {match.profit?.toLocaleString() || 0}</p>
-                    <p>Match: {match.match_name}</p>
-                    <div className="flex mt-2 space-x-2 overflow-x-auto">
-                      <div className="bg-gray-600 p-2 rounded">
-                        Team: ({match.team_side})
+                  <div
+                    key={index}
+                    className={`p-4 rounded-lg mb-4 flex items-center ${
+                      match.team_side === match.winning_team_side
+                        ? "bg-blue-900"
+                        : "bg-red-900"
+                    }`}
+                  >
+                    {/* Colonne gauche : Champion + spells + runes */}
+                    <div className="flex items-center space-x-4">
+                      <div className="relative">
+                        <Image
+                          src={`/img/champion/${removeSpaces(
+                            match.champion.champion_name.toLowerCase()
+                          )}.png`}
+                          alt={`${match.champion.champion_name} Icon`}
+                          width={48}
+                          height={48}
+                          className="rounded-full border-2 border-gray-600"
+                        />
+                        <span className="absolute -bottom-1 -right-1 bg-gray-800 text-white text-xs px-2 py-0.5 rounded-full">
+                          {match.champion_level || 18}
+                        </span>
                       </div>
-                    </div>
-                    {/* Détails du match */}
-                    <div className="mt-4">
-                      <h3 className="text-md font-semibold">Match Details:</h3>
-                      <p>{match.matchDetails.game_type}</p>
-                      <p>
-                        {Math.floor(match.matchDetails.game_duration / 60)}m
-                        {match.matchDetails.game_duration % 60}s
-                      </p>
-                      <p>
-                        Winning Team: {match.matchDetails.winning_team_side}
-                      </p>
-                    </div>
-                    {/* Informations du champion */}
-                    <div className="mt-4">
-                      <Image
-                        src={`/img/champion/${removeSpaces(
-                          match.champion.champion_name.toLowerCase()
-                        )}.png`} // Supprime les espaces dans le nom du champion
-                        alt={`${match.champion.champion_name} Icon`}
-                        width={64}
-                        height={64}
-                        className="rounded-full"
-                      />
-                      <div className="flex space-x-2 mt-2">
-                        {/* Affichage des summoner spells */}
+                      <div className="flex flex-col space-y-1">
                         <Image
                           src={`/img/spell/Summoner${match.summoner_spells.summoner_spell1_name}.png`}
-                          alt={`Summoner Spell 1`}
-                          width={32}
-                          height={32}
-                          className="rounded border-2 border-gray-600"
+                          alt="Summoner Spell 1"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
                         />
                         <Image
                           src={`/img/spell/Summoner${match.summoner_spells.summoner_spell2_name}.png`}
-                          alt={`Summoner Spell 2`}
-                          width={32}
-                          height={32}
-                          className="rounded border-2 border-gray-600"
+                          alt="Summoner Spell 2"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
                         />
                       </div>
-                      <Image
-                          src={`/img/rune/Styles/${match.runes.primary_rune_name}.png`}
-                          alt={`Rune primaire`}
-                          width={32}
-                          height={32}
-                          className="rounded border-2 border-gray-600"
+                      <div className="flex flex-col space-y-1">
+                        <Image
+                          src={`/img/rune/Styles/${removeSpaces(match.runes.primary_rune_name)}.png`}
+                          alt="Primary Rune"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
                         />
                         <Image
                           src={`/img/rune/Styles/${match.runes.secondary_rune_name}.png`}
-                          alt={`Rune secondaire`}
-                          width={32}
-                          height={32}
-                          className="rounded border-2 border-gray-600"
+                          alt="Secondary Rune"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
                         />
-                        <p>{match.runes.secondary_rune_name}</p>
-                      <p className="text-md font-semibold">
-                        {match.champion.champion_name}
-                      </p>
+                      </div>
                     </div>
-                    {/* Liste des participants */}
-                    <div className="mt-4">
-                      <h3 className="text-md font-semibold">Participants:</h3>
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        {match.participants.map((participant, idx) => (
+
+                    {/* Score */}
+                    <div className="ml-4 text-center">
+                      <p className="text-lg font-semibold">
+                        {match.kills} / {match.deaths} / {match.assists}
+                      </p>
+                      <p className="text-sm text-gray-400">{match.kda} KDA</p>
+                    </div>
+
+                    {/* Items */}
+                    <div className="flex-grow flex justify-center space-x-2">
+                      {Array.from({ length: 6 }).map((_, idx) => {
+                        const itemName = match.items && match.items[idx] ? match.items[idx] : null;
+                        const formattedItemName = itemName
+                          ? itemName.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "") // Remplace les espaces par des underscores et supprime les caractères spéciaux
+                          : null;
+
+                        return formattedItemName ? (
+                          <Image
+                            key={idx}
+                            src={`/img/item/${formattedItemName}.png`}
+                            alt={`Item ${itemName}`}
+                            width={32}
+                            height={32}
+                            className="rounded-sm"
+                          />
+                        ) : (
                           <div
                             key={idx}
-                            className="bg-gray-600 p-2 rounded flex items-center justify-between"
-                          >
-                            <div className="flex items-center space-x-2">
-                              {/* Image du champion */}
+                            className="w-8 h-8 bg-gray-700 rounded-sm opacity-50"
+                          />
+                        );
+                      })}
+                      {/* Trinket */}
+                      {match.items && match.items[6] ? (
+                        <Image
+                          src={`/img/item/${match.items[6]
+                            .toLowerCase()
+                            .replace(/ /g, "_")
+                            .replace(/[^a-z0-9_]/g, "")}.png`}
+                          alt="Trinket"
+                          width={32}
+                          height={32}
+                          className="rounded-sm"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 bg-gray-700 rounded-sm opacity-50" />
+                      )}
+                    </div>
+
+                    {/* Participants */}
+                    <div className="ml-4 grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        {match.participants
+                          .filter((p) => p.team_side === match.team_side)
+                          .map((participant, idx) => (
+                            <div key={idx} className="flex items-center space-x-2">
                               <Image
                                 src={`/img/champion/${removeSpaces(
                                   participant.champion_name.toLowerCase()
-                                )}.png`} // URL de l'image du champion
-                                alt={participant.champion_name}
-                                width={32}
-                                height={32}
+                                )}.png`}
+                                alt={`${participant.champion_name} Icon`}
+                                width={18}
+                                height={18}
                                 className="rounded-full"
                               />
-                              <span>{participant.summoner_name}</span>
+                              <p className="text-gray-300 truncate">
+                                {participant.summoner_name}
+                              </p>
                             </div>
-                            <span>
-                              {participant.kills} / {participant.deaths} /{" "}
-                              {participant.assists}
-                            </span>
-                            {/* <span>{participant.kda} KDA</span> */}
-                          </div>
-                        ))}
+                          ))}
+                      </div>
+                      <div>
+                        {match.participants
+                          .filter((p) => p.team_side !== match.team_side)
+                          .map((participant, idx) => (
+                            <div key={idx} className="flex items-center space-x-2">
+                              <Image
+                                src={`/img/champion/${removeSpaces(
+                                  participant.champion_name.toLowerCase()
+                                )}.png`}
+                                alt={`${participant.champion_name} Icon`}
+                                width={18}
+                                height={18}
+                                className="rounded-full"
+                              />
+                              <p className="text-gray-300 truncate">
+                                {participant.summoner_name}
+                              </p>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   </div>
