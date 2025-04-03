@@ -42,7 +42,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
         <header className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg shadow-md relative">
           <div className="relative">
             <Image
-              src="/img/icon/10_Year_Anniversary_Poro_profileicon_old.png" // URL statique pour l'image de profil
+              src={`/img/icon/${summoner.summoner_icon_id}.png`} // URL statique pour l'image de profil
               alt="Icone de profil"
               width={64}
               height={64}
