@@ -54,7 +54,8 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
           </div>
           <div>
             <h1 className="text-2xl font-bold">
-              {summoner.summoner_name} <span className="text-gray-400">#{summoner.puuid}</span>
+              {summoner.summoner_name}{" "}
+              <span className="text-gray-400">#{summoner.puuid}</span>
             </h1>
             <p className="text-sm text-gray-400">
               Niveau {summoner.summoner_level}
@@ -68,7 +69,9 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
           <div className="col-span-1 md:col-span-1">
             <div className="bg-gray-800 p-4 rounded-lg shadow-md flex items-center space-x-4">
               <Image
-                src={`/img/rank/${stats.solo_ranked_division.split(' ')[0].toLowerCase()}.png`} 
+                src={`/img/rank/${stats.solo_ranked_division
+                  .split(" ")[0]
+                  .toLowerCase()}.png`}
                 alt={`${stats.solo_ranked_division} Icon`}
                 width={48}
                 height={48}
@@ -80,14 +83,17 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                   {stats.solo_ranked_division} - {stats.solo_lp} LP
                 </p>
                 <p>
-                  {stats.solo_wins}W {stats.solo_losses}L ({stats.winrate}% Win Rate)
+                  {stats.solo_wins}W {stats.solo_losses}L ({stats.winrate}% Win
+                  Rate)
                 </p>
               </div>
             </div>
 
             <div className="bg-gray-800 p-4 rounded-lg shadow-md mt-4 flex items-center space-x-4">
               <Image
-                src={`/img/rank/${stats.flex_ranked_division.split(' ')[0].toLowerCase()}.png`} 
+                src={`/img/rank/${stats.flex_ranked_division
+                  .split(" ")[0]
+                  .toLowerCase()}.png`}
                 alt="Ranked Flex Division"
                 width={48}
                 height={48}
@@ -99,7 +105,8 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                   {stats.flex_ranked_division} - {stats.flex_lp} LP
                 </p>
                 <p>
-                  {stats.flex_wins}W {stats.flex_losses}L ({stats.flex_winrate}% Win Rate)
+                  {stats.flex_wins}W {stats.flex_losses}L ({stats.flex_winrate}%
+                  Win Rate)
                 </p>
               </div>
             </div>
@@ -145,7 +152,20 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         {Math.floor(match.matchDetails.game_duration / 60)}m{" "}
                         {match.matchDetails.game_duration % 60}s
                       </p>
-                      <p>Winning Team: {match.matchDetails.winning_team_side}</p>
+                      <p>
+                        Winning Team: {match.matchDetails.winning_team_side}
+                      </p>
+                    </div>
+                    {/* Informations du champion */}
+                    <div className="mt-4">
+                      {/* <img src="{match.champion.champion_image}"> */}
+                      <Image
+                        src="/{match.champion.champion_image}" // URL statique pour l'image de profil
+                        alt="Icone de profil"
+                        width={64}
+                        height={64}
+                        className="rounded-full"
+                      />
                     </div>
                     {/* Liste des participants */}
                     <div className="mt-4">
@@ -162,7 +182,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                               {participant.assists} KDA
                             </span>
                           </div>
-                        ))}
+                        ))} 
                       </div>
                     </div>
                   </div>

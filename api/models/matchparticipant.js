@@ -44,14 +44,16 @@ class MatchParticipant {
 
     static async getMatchParticipantsByMatchId(match_id) {
         const result = await pool.query(
-            `SELECT mp.participant_id, mp.match_id, mp.champion_id, mp.summoner_id, mp.team_id, mp.kills, mp.deaths, mp.assists, mp.kda, mp.cs, mp.gold_earned, mp.role, mp.profit, mp.summoner_spells, s.summoner_name, t.team_side
+            `SELECT mp.participant_id, mp.match_id, mp.summoner_id, mp.team_id, mp.kills, mp.deaths, mp.assists, mp.kda, mp.cs, mp.gold_earned, mp.role, mp.profit, mp.summoner_spells, 
+                    s.summoner_name, t.team_side, c.champion_name, c.champion_image
              FROM match_participants mp
              INNER JOIN summoners s ON mp.summoner_id = s.summoner_id
              INNER JOIN teams t ON mp.team_id = t.team_id
+             INNER JOIN champion c ON mp.champion_id = c.champion_id
              WHERE mp.match_id = $1`,
             [match_id]
         );
-        return result.rows; // Retourne tous les participants du match
+        return result.rows; // Retourne les participants avec les informations des champions
     }
 
     static async createMatchParticipant({ match_id, champion_id, summoner_id, team_id, kills, deaths, assists, kda, cs, gold_earned, role, profit, summoner_spells }) {
