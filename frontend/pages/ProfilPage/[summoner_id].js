@@ -177,8 +177,8 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     </p>
                     <p className="text-gray-400">
                     {match.kda} KDA</p>
-                    <p>CS: {match.cs?.toLocaleString() || 0}</p>
-                    <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
+                    <p>{match.cs?.toLocaleString() || 0} CS</p>
+                    <p>{match.gold_earned?.toLocaleString() || 0} Gold</p>
                     <p>Lp: {match.profit?.toLocaleString() || 0}</p>
                     <p>Match: {match.match_name}</p>
                     <div className="flex mt-2 space-x-2 overflow-x-auto">
