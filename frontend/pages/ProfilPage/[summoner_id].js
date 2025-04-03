@@ -3,6 +3,11 @@ import Image from "next/image";
 import axios from "axios";
 import "/src/app/globals.css";
 
+// Fonction pour supprimer les espaces dans une chaîne
+function removeSpaces(str) {
+  return str.replace(/\s+/g, ""); // Remplace tous les espaces par une chaîne vide
+}
+
 const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
   if (error) {
     return <div className="text-red-500 p-4">Erreur : {error}</div>;
@@ -159,12 +164,17 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     {/* Informations du champion */}
                     <div className="mt-4">
                       <Image
-                        src={`/img/champion/${match.champion.champion_name.toLowerCase()}.png`} // Chemin basé sur le nom du champion
-                        alt={`${match.champion.name} Icon`}
+                        src={`/img/champion/${removeSpaces(
+                          match.champion.champion_name.toLowerCase()
+                        )}.png`} // Supprime les espaces dans le nom du champion
+                        alt={`${match.champion.champion_name} Icon`}
                         width={64}
                         height={64}
                         className="rounded-full"
                       />
+                      <p className="text-md font-semibold">
+                        {match.champion.champion_name}
+                      </p>
                     </div>
                     {/* Liste des participants */}
                     <div className="mt-4">
@@ -173,15 +183,17 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         {match.participants.map((participant, idx) => (
                           <div
                             key={idx}
-                            className="bg-gray-600 p-2 rounded flex justify-between"
+                            className="bg-gray-600 p-2 rounded flex items-center justify-between"
                           >
-                            <span>{participant.summoner_name}</span>
+                            <div className="flex items-center space-x-2">
+                              <span>{participant.summoner_name}</span>
+                            </div>
                             <span>
                               {participant.kills} / {participant.deaths} /{" "}
                               {participant.assists} KDA
                             </span>
                           </div>
-                        ))} 
+                        ))}
                       </div>
                     </div>
                   </div>
