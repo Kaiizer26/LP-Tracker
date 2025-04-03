@@ -151,25 +151,25 @@ export async function getServerSideProps(context) {
   try {
     // Récupérer les informations du summoner
     const summonerRes = await axios.get(
-      `http://localhost:3002/summoners/summoner-id/${summoner_id}`
+      `http://localhost:3000/summoners/summoner-id/${summoner_id}`
     );
     const summoner = summonerRes.data;
 
     // Récupérer les statistiques classées
     const rankedRes = await axios.get(
-      `http://localhost:3002/summoners/summoner-id/${summoner_id}/ranked`
+      `http://localhost:3000/summoners/summoner-id/${summoner_id}/ranked`
     );
     const rankedStats = rankedRes.data;
 
     // Récupérer les statistiques globales
     const statsRes = await axios.get(
-      `http://localhost:3002/stats/summoner-id/${summoner_id}`
+      `http://localhost:3000/stats/summoner-id/${summoner_id}`
     );
     const stats = statsRes.data;
 
     // Récupérer l'historique des matchs
     const matchHistoryRes = await axios.get(
-      `http://localhost:3002/matchparticipant/summoner-id/${summoner_id}`
+      `http://localhost:3000/matchparticipant/summoner-id/${summoner_id}`
     );
     const matchHistory = matchHistoryRes.data;
 
@@ -177,12 +177,12 @@ export async function getServerSideProps(context) {
     const matchHistoryWithParticipants = await Promise.all(
       matchHistory.map(async (match) => {
         const participantsRes = await axios.get(
-          `http://localhost:3002/matchparticipant/match/${match.match_id}/`
+          `http://localhost:3000/matchparticipant/match/${match.match_id}/`
         );
 
         // Récupérer le KDA pour ce participant
         const kdaRes = await axios.get(
-          `http://localhost:3002/matchparticipant/participant-id/${match.participant_id}/kda`
+          `http://localhost:3000/matchparticipant/participant-id/${match.participant_id}/kda`
         );
 
         return {
@@ -195,7 +195,7 @@ export async function getServerSideProps(context) {
 
     // Récupérer le KDA global
     const kdaRes = await axios.get(
-      `http://localhost:3002/matchparticipant/summoner-id/${summoner_id}/kda`
+      `http://localhost:3000/matchparticipant/summoner-id/${summoner_id}/kda`
     );
     const kda = kdaRes.data;
 

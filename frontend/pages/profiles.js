@@ -10,7 +10,7 @@ export default function Champion() {
 
   useEffect(() => {
     // Récupérer le champion avec l'ID 2
-    axios.get(`http://localhost:3002/champion/champion-id/11`)
+    axios.get(`http://localhost:3000/champion/champion-id/11`)
       .then(response => {
         setChampionData(response.data);
         setLoading(false);
@@ -26,7 +26,7 @@ export default function Champion() {
   if (error) return <p className="text-center text-red-500">{error}</p>;
   if (!championData) return <p className="text-center text-red-500">Champion introuvable.</p>;
 
-  const imageUrl = `http://localhost:3002/img/${championData.champion_image}`;
+  const imageUrl = `http://localhost:3000/img/${championData.champion_image}`;
 
 
 

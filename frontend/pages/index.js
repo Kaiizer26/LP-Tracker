@@ -40,7 +40,7 @@ export default function Home() {
     try {
       // Envoie la requête à l'API pour rechercher un invocateur par son nom
       const response = await axios.get(
-        `http://localhost:3002/summoners/summoner-search/${searchTerm}`
+        `http://localhost:3000/summoners/summoner-search/${searchTerm}`
       );
       if (response.data.length === 0) {
         setError("Aucun invocateur trouvé avec ce nom.");

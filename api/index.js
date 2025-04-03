@@ -19,7 +19,7 @@ const app = express();
 
 // ✅ CORS en premier
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3001',
   methods: 'GET,POST,PUT,DELETE',
   credentials: true,
 };
@@ -33,7 +33,7 @@ app.use('/img', express.static(path.join(__dirname, 'public/img')));
 // ✅ Ensuite les routes
 app.use('/books', bookRoutes);
 app.use('/summoners', summonerRoutes);
-// app.use('/runes', runeRoutes); // PAS ENCORE UTILISE
+app.use('/users', userRoutes);
 app.use('/matches', matchRoutes);
 app.use('/champion', championRoutes);
 app.use('/teams', teamRoutes);
@@ -43,7 +43,6 @@ app.use('/championmastery', ChampionMasteryRoutes);
 app.use('/stats', statsRoutes);
 app.use('/matchparticipant', matchparticipantRoutes);
 app.use('/runes', runeRoutes);
-app.use('/users', userRoutes);
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => {
