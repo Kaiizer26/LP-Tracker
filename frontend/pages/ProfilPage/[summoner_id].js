@@ -39,131 +39,141 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
 
       {/* Profil */}
       <div className="pt-12">
-        <header className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg shadow-md">
-          <Image
-            src="/img/icon/10_Year_Anniversary_Poro_profileicon_old.png" // URL statique pour l'image de profil
-            alt="Icone de profil"
-            width={64}
-            height={64}
-            className="rounded-full"
-          />
+        <header className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg shadow-md relative">
+          <div className="relative">
+            <Image
+              src="/img/icon/10_Year_Anniversary_Poro_profileicon_old.png" // URL statique pour l'image de profil
+              alt="Icone de profil"
+              width={64}
+              height={64}
+              className="rounded-full border-2 border-gray-600"
+            />
+            <span className="absolute -top-2 -left-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded-full">
+              {summoner.summoner_level}
+            </span>
+          </div>
           <div>
-            <h1 className="text-xl font-bold">
-              {summoner.summoner_name} #{summoner.puuid}
+            <h1 className="text-2xl font-bold">
+              {summoner.summoner_name} <span className="text-gray-400">#{summoner.puuid}</span>
             </h1>
             <p className="text-sm text-gray-400">
               Niveau {summoner.summoner_level}
             </p>
           </div>
-          <button className="ml-auto bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg">
-            Update
-          </button>
         </header>
 
-        {/* Statistiques Ranked */}
+        {/* Conteneur principal pour les statistiques et l'historique */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">Ranked Solo</h2>
-            <p>
-              {stats.solo_ranked_division} - {stats.solo_lp} LP
-            </p>
-            <p>
-              {stats.solo_wins}W {stats.solo_losses}L ({stats.winrate}% Win
-              Rate)
-            </p>
-          </div>
-
-          {/* Stats globales */}
-          <div className="bg-gray-800 p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-semibold">Résumé</h2>
-            <p>
-              {stats.winrate} Pas encore % WR - {stats.kda} KDA
-            </p>
-            <p>
-              {/* Derniers 20 matchs: Pas de fonction pr ça{rankedStats.avgKills} /{" "}
-              {sta.avgDeaths} / {rankedStats.avgAssists} */}
-            </p>
-          </div>
-        </div>
-
-        {/* Historique de matchs */}
-        <div className="bg-gray-800 mt-6 p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold">Match History</h2>
-          {Array.isArray(matchHistory) && matchHistory.length > 0 ? (
-            matchHistory.map((match, index) => (
-              <div key={index} className="mt-4 bg-gray-700 p-3 rounded-lg">
-                <div className="flex justify-between">
-                  <p
-                    className={
-                      match.result === "Victory"
-                        ? "text-blue-400"
-                        : "text-red-400"
-                    }
-                  >
-                    {match.winning_team_side}
-                  </p>
-                  <p className="text-gray-400">{match.role}</p>
-                </div>
+          {/* Colonne gauche : Statistiques */}
+          <div className="col-span-1 md:col-span-1">
+            <div className="bg-gray-800 p-4 rounded-lg shadow-md flex items-center space-x-4">
+              <Image
+                src={`/img/rank/${stats.solo_ranked_division.split(' ')[0].toLowerCase()}.png`} 
+                alt={`${stats.solo_ranked_division} Icon`}
+                width={48}
+                height={48}
+                className="rounded"
+              />
+              <div>
+                <h2 className="text-lg font-semibold">Ranked Solo</h2>
                 <p>
-                  {match.kills} / {match.deaths} / {match.assists}
+                  {stats.solo_ranked_division} - {stats.solo_lp} LP
                 </p>
-                <p>{match.kda} KDA</p>
-                <p>CS: {match.cs?.toLocaleString() || 0}</p>
-                <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
-                <p>{match.profit?.toLocaleString() || 0} LP</p>
-                <p>Match: {match.match_name}</p>
-                <div className="flex mt-2 space-x-2 overflow-x-auto">
-                  <div className="bg-gray-600 p-2 rounded">
-                    Team: ({match.team_side})
-                  </div>
-                </div>
-                {/* Détails du match */}
-                <div className="mt-4">
-                  <h3 className="text-md font-semibold">Match Details:</h3>
-                  <p>Game Type: {match.matchDetails.game_type}</p>
-                  <p>
-                    Duration:{" "}
-                    {Math.floor(match.matchDetails.game_duration / 60)}m{" "}
-                    {match.matchDetails.game_duration % 60}s
-                  </p>
-                  <p>Winning Team: {match.matchDetails.winning_team_side}</p>
-                </div>
-                {/* Liste des participants */}
-                <div className="mt-4">
-                  <h3 className="text-md font-semibold">Participants:</h3>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {match.participants.map((participant, idx) => (
-                      <div
-                        key={idx}
-                        className="bg-gray-600 p-2 rounded flex justify-between"
-                      >
-                        <span>{participant.summoner_name}</span>
-                        <span>
-                          {participant.kills} / {participant.deaths} /{" "}
-                          {participant.assists} KDA
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {/* Informations du champion */}
-                <div className="mt-4">
-                  {/* <img src="{match.champion.champion_image}"> */}
-                  <Image
-            src="/{match.champion.champion_image}" // URL statique pour l'image de profil
-            alt="Icone de profil"
-            width={64}
-            height={64}
-            className="rounded-full"
-          />
-                </div>
+                <p>
+                  {stats.solo_wins}W {stats.solo_losses}L ({stats.winrate}% Win Rate)
+                </p>
               </div>
-            ))
-          ) : (
-            <p className="text-gray-400">
-              Aucun historique de matchs disponible.
-            </p>
-          )}
+            </div>
+
+            <div className="bg-gray-800 p-4 rounded-lg shadow-md mt-4 flex items-center space-x-4">
+              <Image
+                src={`/img/rank/${stats.flex_ranked_division.split(' ')[0].toLowerCase()}.png`} 
+                alt="Ranked Flex Division"
+                width={48}
+                height={48}
+                className="rounded"
+              />
+              <div>
+                <h2 className="text-lg font-semibold">Ranked Flex</h2>
+                <p>
+                  {stats.flex_ranked_division} - {stats.flex_lp} LP
+                </p>
+                <p>
+                  {stats.flex_wins}W {stats.flex_losses}L ({stats.flex_winrate}% Win Rate)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Colonne droite : Historique des matchs */}
+          <div className="col-span-1 md:col-span-2">
+            <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+              <h2 className="text-lg font-semibold">Match History</h2>
+              {Array.isArray(matchHistory) && matchHistory.length > 0 ? (
+                matchHistory.map((match, index) => (
+                  <div key={index} className="mt-4 bg-gray-700 p-3 rounded-lg">
+                    <div className="flex justify-between">
+                      <p
+                        className={
+                          match.result === "Victory"
+                            ? "text-blue-400"
+                            : "text-red-400"
+                        }
+                      >
+                        {match.winning_team_side}
+                      </p>
+                      <p className="text-gray-400">{match.role}</p>
+                    </div>
+                    <p>
+                      {match.kills} / {match.deaths} / {match.assists} KDA
+                    </p>
+                    <p>CS: {match.cs?.toLocaleString() || 0}</p>
+                    <p>Gold: {match.gold_earned?.toLocaleString() || 0}</p>
+                    <p>Lp: {match.profit?.toLocaleString() || 0}</p>
+                    <p>Match: {match.match_name}</p>
+                    <div className="flex mt-2 space-x-2 overflow-x-auto">
+                      <div className="bg-gray-600 p-2 rounded">
+                        Team: ({match.team_side})
+                      </div>
+                    </div>
+                    {/* Détails du match */}
+                    <div className="mt-4">
+                      <h3 className="text-md font-semibold">Match Details:</h3>
+                      <p>Game Type: {match.matchDetails.game_type}</p>
+                      <p>
+                        Duration:{" "}
+                        {Math.floor(match.matchDetails.game_duration / 60)}m{" "}
+                        {match.matchDetails.game_duration % 60}s
+                      </p>
+                      <p>Winning Team: {match.matchDetails.winning_team_side}</p>
+                    </div>
+                    {/* Liste des participants */}
+                    <div className="mt-4">
+                      <h3 className="text-md font-semibold">Participants:</h3>
+                      <div className="grid grid-cols-2 gap-2 mt-2">
+                        {match.participants.map((participant, idx) => (
+                          <div
+                            key={idx}
+                            className="bg-gray-600 p-2 rounded flex justify-between"
+                          >
+                            <span>{participant.summoner_name}</span>
+                            <span>
+                              {participant.kills} / {participant.deaths} /{" "}
+                              {participant.assists} KDA
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400">
+                  Aucun historique de matchs disponible.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
