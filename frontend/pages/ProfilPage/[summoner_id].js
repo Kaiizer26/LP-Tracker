@@ -3,6 +3,11 @@ import Image from "next/image";
 import axios from "axios";
 import "/src/app/globals.css";
 
+// Fonction pour supprimer les espaces dans une chaîne
+function removeSpaces(str) {
+  return str.replace(/\s+/g, ""); // Remplace tous les espaces par une chaîne vide
+}
+
 const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
   if (error) {
     return <div className="text-red-500 p-4">Erreur : {error}</div>;
@@ -42,7 +47,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
         <header className="flex items-center space-x-4 p-4 bg-gray-800 rounded-lg shadow-md relative">
           <div className="relative">
             <Image
-              src="/img/icon/10_Year_Anniversary_Poro_profileicon_old.png" // URL statique pour l'image de profil
+              src={`/img/icon/${summoner.summoner_icon_id}.png`} // URL statique pour l'image de profil
               alt="Icone de profil"
               width={64}
               height={64}
@@ -159,12 +164,17 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     {/* Informations du champion */}
                     <div className="mt-4">
                       <Image
-                        src={`/img/champion/${match.champion.champion_name.toLowerCase()}.png`} // Chemin basé sur le nom du champion
-                        alt={`${match.champion.name} Icon`}
+                        src={`/img/champion/${removeSpaces(
+                          match.champion.champion_name.toLowerCase()
+                        )}.png`} // Supprime les espaces dans le nom du champion
+                        alt={`${match.champion.champion_name} Icon`}
                         width={64}
                         height={64}
                         className="rounded-full"
                       />
+                      <p className="text-md font-semibold">
+                        {match.champion.champion_name}
+                      </p>
                     </div>
                     {/* Liste des participants */}
                     <div className="mt-4">
@@ -176,7 +186,6 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                             className="bg-gray-600 p-2 rounded flex items-center justify-between"
                           >
                             <div className="flex items-center space-x-2">
-                              
                               <span>{participant.summoner_name}</span>
                             </div>
                             <span>
