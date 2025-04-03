@@ -125,30 +125,46 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
 
             <div className="bg-gray-800 p-4 rounded-lg shadow-md mt-4">
               <h2 className="text-lg font-semibold">Champion Stats</h2>
-              {Array.isArray(stats.champion_masteries) && stats.champion_masteries.length > 0 ? (
+              {Array.isArray(stats.champion_masteries) &&
+              stats.champion_masteries.length > 0 ? (
                 stats.champion_masteries.map((champion, index) => (
-                  <div key={index} className="flex items-center justify-between mt-4 bg-gray-700 p-3 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between mt-4 bg-gray-700 p-3 rounded-lg"
+                  >
                     <div className="flex items-center space-x-4">
                       <Image
-                        src={`/img/champion/${championMapping[champion.champion_id] || "default"}.png`}
-                        alt={`${championMapping[champion.champion_id] || "Default"} Icon`}
+                        src={`/img/champion/${
+                          championMapping[champion.champion_id] || "default"
+                        }.png`}
+                        alt={`${
+                          championMapping[champion.champion_id] || "Default"
+                        } Icon`}
                         width={48}
                         height={48}
                         className="rounded"
                       />
                       <div>
-                        <h3 className="text-md font-semibold">{champion.champion_name}</h3>
-                        <p className="text-gray-400">{champion.number_of_games} games</p>
+                        <h3 className="text-md font-semibold">
+                          {champion.champion_name}
+                        </h3>
+                        <p className="text-gray-400">
+                          {champion.number_of_games} games
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-blue-400">{champion.kda} KDA</p>
-                      <p className="text-gray-400">{champion.winrate}% Win Rate</p>
+                      <p className="text-gray-400">
+                        {champion.winrate}% Win Rate
+                      </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="text-gray-400">Aucune statistique de champion disponible.</p>
+                <p className="text-gray-400">
+                  Aucune statistique de champion disponible.
+                </p>
               )}
             </div>
           </div>
@@ -175,8 +191,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     <p>
                       {match.kills} / {match.deaths} / {match.assists}
                     </p>
-                    <p className="text-gray-400">
-                    {match.kda} KDA</p>
+                    <p className="text-gray-400">{match.kda} KDA</p>
                     <p>{match.cs?.toLocaleString() || 0} CS</p>
                     <p>{match.gold_earned?.toLocaleString() || 0} Gold</p>
                     <p>Lp: {match.profit?.toLocaleString() || 0}</p>
@@ -209,6 +224,20 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         width={64}
                         height={64}
                         className="rounded-full"
+                      />
+                      <Image
+                        src={`/img/spell/Summoner${match.summoner_spells[0]}.png`} // URL statique pour l'image de profil
+                        alt="Icone de profil"
+                        width={48}
+                        height={48}
+                        className=" border-2 border-gray-600"
+                      />
+                      <Image
+                        src={`/img/spell/Summoner${match.summoner_spells[1]}.png`} // URL statique pour l'image de profil
+                        alt="Icone de profil"
+                        width={48}
+                        height={48}
+                        className=" border-2 border-gray-600"
                       />
                       <p className="text-md font-semibold">
                         {match.champion.champion_name}
