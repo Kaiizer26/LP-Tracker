@@ -179,12 +179,16 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     <div className="flex justify-between">
                       <p
                         className={
-                          match.result === "Victory"
+                          match.team_side === match.winning_team_side
                             ? "text-blue-400"
                             : "text-red-400"
                         }
                       >
-                        {match.winning_team_side}
+                        
+                        {match.team_side === match.winning_team_side
+                          ? "Win"
+                          : "Lose"}
+                        
                       </p>
                       <p className="text-gray-400">{match.role}</p>
                     </div>
@@ -204,10 +208,9 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     {/* Détails du match */}
                     <div className="mt-4">
                       <h3 className="text-md font-semibold">Match Details:</h3>
-                      <p>Game Type: {match.matchDetails.game_type}</p>
+                      <p>{match.matchDetails.game_type}</p>
                       <p>
-                        Duration:{" "}
-                        {Math.floor(match.matchDetails.game_duration / 60)}m{" "}
+                        {Math.floor(match.matchDetails.game_duration / 60)}m
                         {match.matchDetails.game_duration % 60}s
                       </p>
                       <p>
