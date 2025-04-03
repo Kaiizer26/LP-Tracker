@@ -29,30 +29,62 @@ class ItemParticipant {
         return result.rows;
     }
 
-    // static async getItemByItemsParticipant(participant_id) {
-    //     const result = await pool.query(
-    //         `SELECT m.*
-    //          FROM matches m
-    //          INNER JOIN match_participants mp ON m.match_id = mp.match_id
-    //          WHERE mp.participant_id = $1`,
-    //         [participant_id]
-    //     );
-    //     return result.rows[0]; // Retourne les informations du match
-    // }
+    // Essai
+    static async getItemsByParticipantId(item_participant_id) {
+        const result = await pool.query(
+            `SELECT 
+                i1.item_name AS item1_name,
+                i2.item_name AS item2_name,
+                i3.item_name AS item3_name,
+                i4.item_name AS item4_name,
+                i5.item_name AS item5_name,
+                i6.item_name AS item6_name,
+                i7.item_name AS item_vision_name
+             FROM items_participants ip
+             INNER JOIN items i1 ON ip.item1_id = i1.item_id
+             INNER JOIN items i2 ON ip.item2_id = i2.item_id
+             INNER JOIN items i3 ON ip.item3_id = i3.item_id
+             INNER JOIN items i4 ON ip.item4_id = i4.item_id
+             INNER JOIN items i5 ON ip.item5_id = i5.item_id
+             INNER JOIN items i6 ON ip.item6_id = i6.item_id
+             INNER JOIN items i7 ON ip.item_vision_id = i7.item_id
+             WHERE ip.item_participant_id = $1`,
+            [item_participant_id]
+        );
+        return result.rows[0]; // Retourne les noms des deux summoner spells
+    }
 
-    // static async getMatchParticipantsByMatchId(match_id) {
-    //     const result = await pool.query(
-    //         `SELECT mp.participant_id, mp.match_id, mp.summoner_id, mp.team_id, mp.item_participant_id, mp.rune_participant_id, mp.summoner_spell_participant_id, mp.kills, mp.deaths, mp.assists, mp.kda, mp.cs, mp.gold_earned, mp.role, mp.profit, mp.damage, 
-    //                 s.summoner_name, t.team_side, c.champion_name,
-    //          FROM match_participants mp
-    //          INNER JOIN summoners s ON mp.summoner_id = s.summoner_id
-    //          INNER JOIN teams t ON mp.team_id = t.team_id
-    //          INNER JOIN champions c ON mp.champion_id = c.champion_id
-    //          WHERE mp.match_id = $1`,
-    //         [match_id]
-    //     );
-    //     return result.rows; // Retourne les participants avec les informations des champions
-    // }
+
+    // cop
+    static async getItemsByMatchParticipantId(match_participant_id) {
+        try {
+            const result = await pool.query(
+                `SELECT 
+                    i1.item_name AS item1_name,
+                    i2.item_name AS item2_name,
+                    i3.item_name AS item3_name,
+                    i4.item_name AS item4_name,
+                    i5.item_name AS item5_name,
+                    i6.item_name AS item6_name,
+                    i7.item_name AS item_vision_name
+                 FROM match_participants mp
+                 INNER JOIN items_participants ip ON mp.item_participant_id = ip.item_participant_id
+                 LEFT JOIN items i1 ON ip.item1_id = i1.item_id
+                 LEFT JOIN items i2 ON ip.item2_id = i2.item_id
+                 LEFT JOIN items i3 ON ip.item3_id = i3.item_id
+                 LEFT JOIN items i4 ON ip.item4_id = i4.item_id
+                 LEFT JOIN items i5 ON ip.item5_id = i5.item_id
+                 LEFT JOIN items i6 ON ip.item6_id = i6.item_id
+                 LEFT JOIN items i7 ON ip.item_vision_id = i7.item_id
+                 WHERE mp.participant_id = $1`,
+                [match_participant_id]
+            );
+            return result.rows[0]; // Retourne les noms des items
+        } catch (error) {
+            console.error("Error in getItemsByMatchParticipantId:", error);
+            throw error;
+        }
+    }
 
     static async createItemParticipant({ item1_id, item2_id, item3_id, item4_id, item5_id, item6_id, item_vision_id }) {
         const result = await pool.query(

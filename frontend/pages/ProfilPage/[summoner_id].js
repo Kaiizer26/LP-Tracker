@@ -244,24 +244,102 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         />
                       </div>
                       <Image
-                          src={`/img/rune/Styles/${match.runes.primary_rune_name}.png`}
-                          alt={`Rune primaire`}
-                          width={32}
-                          height={32}
-                          className="rounded border-2 border-gray-600"
-                        />
-                        <Image
-                          src={`/img/rune/Styles/${match.runes.secondary_rune_name}.png`}
-                          alt={`Rune secondaire`}
-                          width={32}
-                          height={32}
-                          className="rounded border-2 border-gray-600"
-                        />
-                        <p>{match.runes.secondary_rune_name}</p>
+                        src={`/img/rune/Styles/${removeSpaces(
+                          match.runes.primary_rune_name.toLowerCase()
+                        )}.png`}
+                        alt={`Rune primaire`}
+                        width={32}
+                        height={32}
+                        className="rounded border-2 border-gray-600"
+                      />
+                      <Image
+                        src={`/img/rune/Styles/${removeSpaces(
+                          match.runes.secondary_rune_name.toLowerCase()
+                        )}.png`}
+                        alt={`Rune secondaire`}
+                        width={32}
+                        height={32}
+                        className="rounded border-2 border-gray-600"
+                      />
+                      <p>{match.runes.secondary_rune_name}</p>
                       <p className="text-md font-semibold">
                         {match.champion.champion_name}
                       </p>
                     </div>
+                    {/* Affichage des items
+                    <div className="mt-4">
+                      <h3 className="text-md font-semibold">Items</h3>
+                      <div className="flex space-x-2">
+                        {match.items && (
+                          <>
+                            <Image
+                              src={`/img/items/${removeSpaces(
+                                match.items.item1_name
+                              )}.png`}
+                              alt={match.items.item1_name}
+                              width={32}
+                              height={32}
+                              className="rounded border-2 border-gray-600"
+                            />
+                            <Image
+                              src={`/img/items/${removeSpaces(
+                                match.items.item2_name
+                              )}.png`}
+                              alt={match.items.item2_name}
+                              width={32}
+                              height={32}
+                              className="rounded border-2 border-gray-600"
+                            />
+                            <Image
+                              src={`/img/items/${removeSpaces(
+                                match.items.item3_name
+                              )}.png`}
+                              alt={match.items.item3_name}
+                              width={32}
+                              height={32}
+                              className="rounded border-2 border-gray-600"
+                            />
+                            <Image
+                              src={`/img/items/${removeSpaces(
+                                match.items.item4_name
+                              )}.png`}
+                              alt={match.items.item4_name}
+                              width={32}
+                              height={32}
+                              className="rounded border-2 border-gray-600"
+                            />
+                            <Image
+                              src={`/img/items/${removeSpaces(
+                                match.items.item5_name
+                              )}.png`}
+                              alt={match.items.item5_name}
+                              width={32}
+                              height={32}
+                              className="rounded border-2 border-gray-600"
+                            />
+                            <Image
+                              src={`/img/items/${removeSpaces(
+                                match.items.item6_name
+                              )}.png`}
+                              alt={match.items.item6_name}
+                              width={32}
+                              height={32}
+                              className="rounded border-2 border-gray-600"
+                            />
+                            <Image
+                              src={`/img/items/${removeSpaces(
+                                match.items.item_vision_name
+                              )}.png`}
+                              alt={match.items.item_vision_name}
+                              width={32}
+                              height={32}
+                              className="rounded border-2 border-gray-600"
+                            />
+                          </>
+                        )}
+                      </div>
+                    </div> */}
+                    <p>{ match.items.item1_name}</p>
                     {/* Liste des participants */}
                     <div className="mt-4">
                       <h3 className="text-md font-semibold">Participants:</h3>
@@ -310,7 +388,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
 
 export async function getServerSideProps(context) {
   const { summoner_id } = context.params;
-
+  
   try {
     // Récupérer les informations du summoner
     const summonerRes = await axios.get(
@@ -367,12 +445,18 @@ export async function getServerSideProps(context) {
           `http://localhost:3000/runeparticipant/names/${match.rune_participant_id}`
         );
 
+        // Récupérer les noms des items via match_participant_id
+        const itemsRes = await axios.get(
+          `http://localhost:3000/itemparticipant/match/${match.participant_id}`
+        );
+
         return {
           ...match,
           participants: participantsRes.data, // Ajoute les participants au match
           matchDetails: matchDetailsRes.data, // Ajoute les détails du match
           champion: championRes.data, // Ajoute les informations du champion
           runes: runeNamesRes.data, // Ajoute les noms des runes
+          items: itemsRes.data, // Ajoute les noms des objets
           summoner_spells: summonerSpellsRes.data, // Ajoute les noms des summoner spells
         };
       })

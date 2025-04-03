@@ -23,36 +23,34 @@ router.get('/:item_participant_id', async (req, res) => {
     }
 });
 
+// Essai
+router.get('/names/:item_participant_id', async (req, res) => {
+    try {
+        const ItemsNames = await ItemParticipant.getItemsByParticipantId(
+            req.params.item_participant_id
+        );
+        ItemsNames
+            ? res.status(200).json(ItemsNames)
+            : res.status(404).json({ message: "Items not found" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
-// problème pr l'instant, récupère le match par participant_id (c'est à dire le match d'un joueur)
-// router.get('/match/participant_id/:participant_id/', async (req, res) => {
-//     try {
-//         const match = await ItemParticipant.getMatchByItemParticipantId(req.params.participant_id);
-//         if (match) {
-//             res.status(200).json(match);
-//         } else {
-//             res.status(404).json({ message: "Match not found for this participant." });
-//         }
-//     } catch (error) {
-//         console.error("Error fetching match by participant_id:", error);
-//         res.status(500).json({ error: error.message });
-//     }
-// });
-
-// en test, récupère tous les participants d'un match
-// router.get('/match/:match_id/', async (req, res) => {
-//     try {
-//         const participants = await ItemParticipant.getitemparticipantsByMatchId(req.params.match_id);
-//         if (participants.length > 0) {
-//             res.status(200).json(participants);
-//         } else {
-//             res.status(404).json({ message: "No participants found for this match." });
-//         }
-//     } catch (error) {
-//         console.error("Error fetching participants by match_id:", error);
-//         res.status(500).json({ error: error.message });
-//     }
-// }); 
+// cop
+router.get('/match/:match_participant_id', async (req, res) => {
+    try {
+        const itemsNames = await ItemParticipant.getItemsByMatchParticipantId(
+            req.params.match_participant_id
+        );
+        itemsNames
+            ? res.status(200).json(itemsNames)
+            : res.status(404).json({ message: "Items not found for the given match participant ID" });
+    } catch (error) {
+        console.error("Error in /match/:match_participant_id:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 router.post('/', async (req, res) => {
     try {
