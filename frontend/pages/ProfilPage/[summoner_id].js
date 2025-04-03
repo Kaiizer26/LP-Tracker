@@ -186,6 +186,16 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                             className="bg-gray-600 p-2 rounded flex items-center justify-between"
                           >
                             <div className="flex items-center space-x-2">
+                              {/* Image du champion */}
+                              <Image
+                                src={`/img/champion/${removeSpaces(
+                                  participant.champion_name.toLowerCase()
+                                )}.png`} // URL de l'image du champion
+                                alt={participant.champion_name}
+                                width={32}
+                                height={32}
+                                className="rounded-full"
+                              />
                               <span>{participant.summoner_name}</span>
                             </div>
                             <span>
