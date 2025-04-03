@@ -12,6 +12,9 @@ const spellRoutes = require('./routes/spellRoutes');
 const ChampionMasteryRoutes = require('./routes/championmasteryRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const matchparticipantRoutes = require('./routes/matchparticipantRoutes');
+const itemparticipantRoutes = require('./routes/itemparticipantRoutes');
+const runeparticipantRoutes = require('./routes/runeparticipantRoutes');
+const summonerspellparticipantRoutes = require('./routes/summonerspellparticipantRoutes');
 const runeRoutes = require('./routes/runeRoutes');
 require('dotenv').config();
 
@@ -42,6 +45,9 @@ app.use('/spells', spellRoutes);
 app.use('/championmastery', ChampionMasteryRoutes);
 app.use('/stats', statsRoutes);
 app.use('/matchparticipant', matchparticipantRoutes);
+app.use('/itemparticipant', itemparticipantRoutes);
+app.use('/runeparticipant', runeparticipantRoutes);
+app.use('/summonerspellparticipant', summonerspellparticipantRoutes);
 app.use('/runes', runeRoutes);
 
 const PORT = process.env.PORT ;

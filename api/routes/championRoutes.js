@@ -25,6 +25,21 @@ router.get('/champion-id/:champion_id', async (req, res) => {
     }
 });
 
+// GET - Obtenir les informations du champion par participant_id
+router.get('/participant/:participant_id', async (req, res) => {
+    try {
+        const champion = await Champion.getChampionByParticipantId(req.params.participant_id);
+        if (champion) {
+            res.status(200).json(champion);
+        } else {
+            res.status(404).json({ message: "Champion not found for this participant." });
+        }
+    } catch (error) {
+        console.error("Error fetching champion by participant_id:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.get('/champion-name/:champion_name', async (req, res) => {
     try {
         const champions = await Champion.getChampionByChampionName(req.params.champion_name);

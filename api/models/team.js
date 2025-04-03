@@ -20,16 +20,16 @@ class Team {
         return result.rows[0]
     }
 
-    static async createTeam({match_id, team_name, team_side}){
+    static async createTeam({match_id, team_side}){
         const result = await pool.query(
-            'INSERT INTO teams (match_id, team_name, team_side) VALUES ($1, $2, $3) RETURNING *', [match_id, team_name, team_side]
+            'INSERT INTO teams (match_id, team_side) VALUES ($1, $2) RETURNING *', [match_id, team_side]
         )
     return result.rows[0]
     }
 
-    static async updateTeam(team_id, {match_id, team_name, team_side}){
+    static async updateTeam(team_id, {match_id, team_side}){
         const result = await pool.query(
-            'UPDATE teams SET match_id = $1, team_name = $2, team_side = $3 WHERE team_id = $4 RETURNING *', [match_id, team_name, team_side, team_id]
+            'UPDATE teams SET match_id = $1, team_side = $3 WHERE team_id = $4 RETURNING *', [match_id, team_side, team_id]
         )
     }
 
