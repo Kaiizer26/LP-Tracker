@@ -48,7 +48,6 @@ CREATE TABLE items (
     item_name VARCHAR(255) UNIQUE NOT NULL,
     item_image VARCHAR(255) NOT NULL,
     item_description TEXT NOT NULL,
-    description TEXT NOT NULL,
     price INT NOT NULL CHECK (price >= 0),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -169,7 +168,7 @@ VALUES
 INSERT INTO summoners (summoner_name, puuid, region, summoner_icon_id, summoner_level)
 VALUES 
 ('IreliaFan123', 'Mvnu', 'EUW', '101', 30),
-('depchai', 'EUW', 'NA', '102', 45),
+('depchai', 'VTN', 'NA', '102', 45),
 ('Kaiizer', '261', 'KR', '103', 50);
 
 -- Insérer des champions
