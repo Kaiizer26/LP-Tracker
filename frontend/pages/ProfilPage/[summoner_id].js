@@ -4,6 +4,7 @@ import axios from "axios";
 import "/src/app/globals.css";
 import championMapping from "/data/championMapping.json";
 
+
 // Fonction pour normaliser le nom du champion
 const formatChampionName = (name) => {
   if (!name) return "default"; // Retourne une image par défaut si le nom est absent

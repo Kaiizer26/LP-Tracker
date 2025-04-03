@@ -30,21 +30,20 @@ class User {
         return result.rows[0]; // Si un utilisateur avec cet email existe, il sera retourné
     }
 
-    static async createUser({ username, email, password }) {
+    static async createUser({ username, user_image, email, password }) {
         const result = await pool.query(
-            'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
-            [username, email, password]
+            'INSERT INTO users (username, user_image, email, password) VALUES ($1, $2, $3, $4) RETURNING *',
+            [username, user_image, email, password]
         );
         return result.rows[0]; // Retourne l'utilisateur créé
     }
-
     static async updateUser(user_id, { username, email, password }) {
         const result = await pool.query(
             `UPDATE users 
-             SET username = $1, email = $2, password = $3 
-             WHERE user_id = $4 
+             SET username = $1, user_image = $2, email = $3, password = $4 
+             WHERE user_id = $5
              RETURNING *`,
-            [username, email, password, user_id]
+            [username, user_image, email, password, user_id]
         );
         return result.rows[0]; // Retourne l'utilisateur mis à jour
     }
