@@ -36,7 +36,7 @@ export default function Register() {
         console.log('Utilisateur créé', data);
 
         // Connexion automatique après inscription
-        const loginResponse = await fetch('http://localhost:3000/users/login', {  // Assure-toi de l'URL correcte
+        const loginResponse = await fetch('http://localhost:3000/users/login', {  
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export default function Register() {
           // Rediriger après un délai de 3 secondes
           setSuccess("Inscription réussie ! Vous êtes automatiquement connecté. Vous allez être redirigé à l'accueil.");
           setTimeout(() => {
-            window.location.href = "/"; // Redirige vers la page d'accueil
+            window.location.href = "/"; 
           }, 3000);
 
         } else {

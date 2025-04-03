@@ -20,7 +20,7 @@ require('dotenv').config();
 
 const app = express();
 
-// ✅ CORS en premier
+//  CORS en premier
 const corsOptions = {
   origin: 'http://localhost:3001',
   methods: 'GET,POST,PUT,DELETE',
@@ -28,12 +28,12 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// ✅ Puis les middlewares
+//  Puis les middlewares
 app.use(express.json());
 app.use(cors());
 app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
-// ✅ Ensuite les routes
+//  Ensuite les routes
 app.use('/books', bookRoutes);
 app.use('/summoners', summonerRoutes);
 app.use('/users', userRoutes);

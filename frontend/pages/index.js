@@ -3,27 +3,28 @@ import axios from "axios";
 import Link from "next/link";
 import "/src/app/globals.css";
 import Head from "next/head";
+import { logout } from "./logout"; 
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [summoners, setSummoners] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(""); // Message d'erreur
+  const [error, setError] = useState(""); 
   const [isAuthenticated, setIsAuthenticated] = useState(false); // État pour vérifier si l'utilisateur est connecté
 
   // Vérifier si l'utilisateur est connecté dès le chargement de la page
   useEffect(() => {
-    const token = localStorage.getItem("authToken"); // Vérifier si un token est stocké
+    const token = localStorage.getItem("authToken"); 
     if (token) {
-      setIsAuthenticated(true); // L'utilisateur est connecté si le token est trouvé
+      setIsAuthenticated(true); // si token trouvé = connexion
     }
-  }, []); // Ce useEffect se lance au chargement de la page
+  }, []); 
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken"); // Supprimer le token de `localStorage`
-    setIsAuthenticated(false); // Mettre à jour l'état pour refléter la déconnexion
-    window.location.href = "/"; // Rediriger vers la page d'accueil
-  };
+  
+
+const handleLogout = () => {
+  logout(); // appelle le logout pour deconnexion
+};
 
   // Gérer le changement de texte dans la barre de recherche
   const handleSearchChange = (event) => {
@@ -38,7 +39,7 @@ export default function Home() {
     setLoading(true);
     setError(""); // Réinitialise le message d'erreur avant de chercher
     try {
-      // Envoie la requête à l'API pour rechercher un invocateur par son nom
+     
       const response = await axios.get(
         `http://localhost:3000/summoners/summoner-search/${searchTerm}`
       );

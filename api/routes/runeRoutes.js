@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Rune = require('../models/rune');  // Le chemin vers ton fichier contenant la classe Rune
+const Rune = require('../models/rune');  
 
 // Récupérer toutes les runes
 router.get('/', async (req, res) => {

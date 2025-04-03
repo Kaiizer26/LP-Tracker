@@ -46,19 +46,6 @@ router.get('/summoner-id/:id/ranked', async (req, res) => {
     }
 });
 
-// GET flex stats
-// PAS UTILISE POUR L'INSTANT
-/*router.get('/summoner-id/:id/flex', async (req, res) => {
-    try {
-        const stats = await Summoner.getFlexStats(req.params.id);
-        res.status(200).json(stats);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-*/
-// GET normal stats
-// PAS UTILISE POUR L'INSTANT
 router.get('/summoner-id/:id/normal', async (req, res) => {
     try {
         const stats = await Summoner.getNormalStats(req.params.id);
@@ -69,7 +56,7 @@ router.get('/summoner-id/:id/normal', async (req, res) => {
 });
 
 // GET champion mastery
-// PAS UTILISE POUR L'INSTANT
+
 router.get('/summoner-id/:id/mastery', async (req, res) => {
     try {
         const mastery = await Summoner.getMastery(req.params.id);
@@ -80,7 +67,7 @@ router.get('/summoner-id/:id/mastery', async (req, res) => {
 });
 
 // GET top mastery
-// PAS UTILISE POUR L'INSTANT
+
 router.get('/summoner-id/:id/top-mastery', async (req, res) => {
     try {
         const topMastery = await Summoner.getTopMastery(req.params.id);
@@ -91,7 +78,7 @@ router.get('/summoner-id/:id/top-mastery', async (req, res) => {
 });
 
 // GET champion mastery for a specific champion
-// PAS UTILISE POUR L'INSTANT
+
 router.get('/summoner-id/:id/mastery/:championId', async (req, res) => {
     try {
         const mastery = await Summoner.getChampionMastery(req.params.id, req.params.championId);
@@ -102,7 +89,7 @@ router.get('/summoner-id/:id/mastery/:championId', async (req, res) => {
 });
 
 // GET clash info
-// PAS UTILISE POUR L'INSTANT
+
 router.get('/summoner-id/:id/clash', async (req, res) => {
     try {
         const clashInfo = await Summoner.getClashInfo(req.params.id);

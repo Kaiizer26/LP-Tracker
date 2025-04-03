@@ -9,15 +9,15 @@ export default function Login() {
     email: '', 
     password: ''
   });
-  const [errorMessage, setErrorMessage] = useState(''); // Message d'erreur
-  const [successMessage, setSuccessMessage] = useState(''); // Message de succès
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Indicateur d'authentification
+  const [errorMessage, setErrorMessage] = useState(''); 
+  const [successMessage, setSuccessMessage] = useState(''); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
 
-  // Vérifie si l'utilisateur est déjà connecté au moment où la page se charge
+  
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
-      setIsAuthenticated(true); // Si un token existe, l'utilisateur est connecté
+      setIsAuthenticated(true); 
     }
   }, []);
 
@@ -42,15 +42,15 @@ export default function Login() {
         if (response.ok) {
             const data = await response.json();
             console.log('Connexion réussie', data);
-            setSuccessMessage(`Connexion réussie ! Bienvenue ${data.username}`); // Afficher le nom d'utilisateur
-            setIsAuthenticated(true); // Utilisateur authentifié
+            setSuccessMessage(`Connexion réussie ! Bienvenue ${data.username}`); 
+            setIsAuthenticated(true); 
 
             // Stocker le token dans le localStorage
             localStorage.setItem('authToken', data.token);
 
             // Rediriger après un délai de 3 secondes
             setTimeout(() => {
-                window.location.href = "/"; // Redirige vers la page d'accueil
+                window.location.href = "/"; 
             }, 3000);
 
         } else {
@@ -111,7 +111,7 @@ export default function Login() {
               />
             </div>
 
-            {/* Affichage des messages d'erreur ou de succès */}
+            
             {errorMessage && (
               <p className="text-red-500 text-center mt-4">{errorMessage}</p>
             )}
@@ -123,7 +123,7 @@ export default function Login() {
             <button type="submit" className="w-full bg-blue-600 px-4 py-2 rounded-lg mt-4 text-white font-bold">Se connecter</button>
           </form>
           
-          {/* Affichage des boutons en fonction de l'état de connexion */}
+         
           {!isAuthenticated && (
             <p className="text-gray-400 text-center mt-4">
               Pas encore de compte ? <Link href="/register" className="text-blue-500">S'inscrire</Link>

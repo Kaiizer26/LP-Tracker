@@ -2,7 +2,7 @@ const express = require("express");
 const RuneParticipant = require("../models/runeparticipant");
 
 const router = express.Router();
-// Endpoints for matches
+
 
 // Match participant (stat d'un match d'un seul joueur)
 

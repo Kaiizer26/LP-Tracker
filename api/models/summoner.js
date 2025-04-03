@@ -35,12 +35,6 @@ class Summoner {
         return result.rows[0];
     }
 
-    /*static async getFlexStats(summonerId) {
-        const result = await pool.query('SELECT * FROM flex_stats WHERE summoner_id = $1', [summonerId]);
-        return result.rows[0];
-    }
-    */
-
     static async getNormalStats(summonerId) {
         const result = await pool.query('SELECT * FROM normal_stats WHERE summoner_id = $1', [summonerId]);
         return result.rows[0];

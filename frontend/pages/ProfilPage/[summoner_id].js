@@ -277,7 +277,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                               <Image
                                 src={`/img/champion/${removeSpaces(
                                   participant.champion_name.toLowerCase()
-                                )}.png`} // URL de l'image du champion
+                                )}.png`} 
                                 alt={participant.champion_name}
                                 width={32}
                                 height={32}
@@ -289,7 +289,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                               {participant.kills} / {participant.deaths} /{" "}
                               {participant.assists}
                             </span>
-                            {/* <span>{participant.kda} KDA</span> */}
+                            
                           </div>
                         ))}
                       </div>

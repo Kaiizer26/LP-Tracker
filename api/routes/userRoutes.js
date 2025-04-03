@@ -41,13 +41,13 @@ router.post('/', async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        // Vérifier si l'email existe déjà
+        
         const existingEmail = await User.getUserByEmail(email);
         if (existingEmail) {
             return res.status(400).json({ error: "L'email est déjà associé à un autre compte." });
         }
 
-        // Vérifier si l'username existe déjà
+       
         const existingUser = await User.getUserByUsername(username);
         if (existingUser) {
             return res.status(400).json({ error: "Le nom d'utilisateur est déjà pris." });
@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
         const newUser = await User.createUser({
             username,
             email,
-            password: hashedPassword // Utiliser le mot de passe haché
+            password: hashedPassword 
         });
 
         // Générer un token JWT pour l'utilisateur
@@ -70,7 +70,7 @@ router.post('/', async (req, res) => {
         res.status(201).json({ token, message: "Utilisateur créé et connecté." });
 
     } catch (error) {
-        res.status(500).json({ error: error.message }); // Gestion des erreurs
+        res.status(500).json({ error: error.message }); 
     }
 });
 
@@ -126,7 +126,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: "Email ou mot de passe incorrect." });
         }
 
-        // Vérifier si le mot de passe est correct
+        
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ error: "Email ou mot de passe incorrect." });
