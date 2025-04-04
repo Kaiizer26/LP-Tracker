@@ -3,8 +3,6 @@ import Image from "next/image";
 import axios from "axios";
 import "/src/app/globals.css";
 import championMapping from "/data/championMapping.json";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 
 // Fonction pour normaliser le nom du champion
 const formatChampionName = (name) => {
@@ -18,26 +16,6 @@ function removeSpaces(str) {
 }
 
 const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  // Nouveau state pour savoir si l'utilisateur est connecté
-  const router = useRouter();
-
-  // Vérifier la présence du token à chaque fois que le composant est monté
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      setIsLoggedIn(true);  // Si le token existe, l'utilisateur est connecté
-    } else {
-      setIsLoggedIn(false);  // Sinon, l'utilisateur n'est pas connecté
-    }
-  }, []);
-
-  // Fonction de déconnexion
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');  // Supprimer le token de localStorage
-    setIsLoggedIn(false);  // Met à jour l'état de connexion
-    router.push('/login');  // Redirige vers la page de connexion
-  };
-
   if (error) {
     return <div className="text-red-500 p-4">Erreur : {error}</div>;
   }
@@ -58,27 +36,16 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
           LP-TRACKER
         </Link>
         <div>
-          {!isLoggedIn ? (
-            <>
-              <Link href="/register">
-                <button className="bg-red-500 px-4 py-2 rounded-lg">
-                  S'inscrire
-                </button>
-              </Link>
-              <Link href="/login">
-                <button className="bg-blue-600 px-4 py-2 rounded-lg ml-2">
-                  Se connecter
-                </button>
-              </Link>
-            </>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 px-4 py-2 rounded-lg ml-2"
-            >
-              Déconnexion
+          <Link href="/register">
+            <button className="bg-red-500 px-4 py-2 rounded-lg">
+              S'inscrire
             </button>
-          )}
+          </Link>
+          <Link href="/login">
+            <button className="bg-blue-600 px-4 py-2 rounded-lg ml-2">
+              Se connecter
+            </button>
+          </Link>
         </div>
       </nav>
 
@@ -216,7 +183,58 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                         : "bg-red-900"
                     }`}
                   >
-                    {/* Informations du match */}
+                    {/* Colonne gauche : Champion + spells + runes */}
+                    <div className="flex items-center space-x-4">
+                      <div className="relative">
+                        <Image
+                          src={`/img/champion/${removeSpaces(
+                            match.champion.champion_name.toLowerCase()
+                          )}.png`}
+                          alt={`${match.champion.champion_name} Icon`}
+                          width={48}
+                          height={48}
+                          className="rounded-full border-2 border-gray-600"
+                        />
+                        <span className="absolute -bottom-1 -right-1 bg-gray-800 text-white text-xs px-2 py-0.5 rounded-full">
+                          {match.champion_level || 18}
+                        </span>
+                      </div>
+                      
+                      <div className="flex flex-col space-y-1">
+                        <Image
+                          src={`/img/spell/Summoner${match.summoner_spells.summoner_spell1_name}.png`}
+                          alt="Summoner Spell 1"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
+                        />
+                        <Image
+                          src={`/img/spell/Summoner${match.summoner_spells.summoner_spell2_name}.png`}
+                          alt="Summoner Spell 2"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
+                        />
+                      </div>
+                      <div className="flex flex-col space-y-1">
+                        <Image
+                          src={`/img/rune/Styles/${removeSpaces(match.runes.primary_rune_name)}.png`}
+                          alt="Primary Rune"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
+                        />
+                        <Image
+                          src={`/img/rune/Styles/${match.runes.secondary_rune_name}.png`}
+                          alt="Secondary Rune"
+                          width={20}
+                          height={20}
+                          className="rounded-sm"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Score */}
                     <div className="ml-4 text-center">
                       <p className="text-lg font-semibold">
                         {match.kills} / {match.deaths} / {match.assists}
@@ -225,58 +243,33 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                     </div>
                     
 
-                    {/* ESSAI AFFICHAGE SUPPRIMER */}
-                    <p>{ `${match.items.item1_name.toLowerCase().replace(/ /g, "").replace(/[^a-z0-9_]/g, "")}.png`}</p>
-                    <Image
-                      src={`/img/item/${match.items.item1_name.toLowerCase().replace(/ /g, "").replace(/[^a-z0-9_]/g, "")}.png`}
-                      alt="Item 1"
-                      width={32}
-                      height={32}
-                      className="rounded-sm"
-                    />
-
 
 
                     {/* Items */}
                     <div className="flex-grow flex justify-center space-x-2">
                       {Array.from({ length: 6 }).map((_, idx) => {
-                        const itemName = match.items && match.items[idx] ? match.items[idx] : null;
-                        const formattedItemName = itemName
-                          ? itemName.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "") // Remplace les espaces par des underscores et supprime les caractères spéciaux
-                          : null;
+                        // Accéder dynamiquement aux items en utilisant `item${idx + 1}_name`
+                        const itemName = match.items && match.items[`item${idx + 1}_name`] 
+                          ? match.items[`item${idx + 1}_name`] 
+                          : null; 
+                        const formattedItemName = itemName ? removeSpaces(itemName.toLowerCase().replace(/'/g, "")) : null;
+
                         return formattedItemName ? (
                           <Image
                             key={idx}
-                            src={`/img/item/${match.items.item1_name.toLowerCase().replace(/ /g, "").replace(/[^a-z0-9_]/g, "")}.png`}
+                            src={`/img/item/${formattedItemName}.png`}
                             alt={`Item ${itemName}`}
                             width={32}
                             height={32}
                             className="rounded-sm"
-                          />                          
+                          />
                         ) : (
                           <div
                             key={idx}
                             className="w-8 h-8 bg-gray-700 rounded-sm opacity-50"
                           />
-                          
                         );
-                        
                       })}
-                      {/* Trinket */}
-                      {match.items && match.items[6] ? (
-                        <Image
-                          src={`/img/item/${match.items[6]
-                            .toLowerCase()
-                            .replace(/ /g, "_")
-                            .replace(/[^a-z0-9_]/g, "")}.png`}
-                          alt="Trinket"
-                          width={32}
-                          height={32}
-                          className="rounded-sm"
-                        />
-                      ) : (
-                        <div className="w-8 h-8 bg-gray-700 rounded-sm opacity-50" />
-                      )}
                     </div>
 
                     {/* Participants */}
@@ -339,7 +332,7 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
 
 export async function getServerSideProps(context) {
   const { summoner_id } = context.params;
-
+  
   try {
     // Récupérer les informations du summoner
     const summonerRes = await axios.get(
@@ -368,12 +361,57 @@ export async function getServerSideProps(context) {
     );
     const matchHistory = matchHistoryRes.data;
 
+    // Récupérer les participants, les détails du match et les informations du champion pour chaque match
+    const matchHistoryWithDetails = await Promise.all(
+      matchHistory.map(async (match) => {
+        // Récupérer les participants du match
+        const participantsRes = await axios.get(
+          `http://localhost:3000/matchparticipant/match/${match.match_id}/`
+        );
+
+        // Récupérer les détails du match via participant_id
+        const matchDetailsRes = await axios.get(
+          `http://localhost:3000/matchparticipant/match/participant_id/${match.participant_id}`
+        );
+
+        // Récupérer les informations du champion via participant_id
+        const championRes = await axios.get(
+          `http://localhost:3000/champion/participant/${match.participant_id}`
+        );
+
+        // Récupérer les noms des summoner spells via summoner_spell_participant_id
+        const summonerSpellsRes = await axios.get(
+          `http://localhost:3000/summonerspellparticipant/names/${match.summoner_spell_participant_id}`
+        );
+
+        // Récupérer les noms des runes via rune_participant_id
+        const runeNamesRes = await axios.get(
+          `http://localhost:3000/runeparticipant/names/${match.rune_participant_id}`
+        );
+
+        // Récupérer les noms des items via match_participant_id
+        const itemsRes = await axios.get(
+          `http://localhost:3000/itemparticipant/match/${match.participant_id}`
+        );
+
+        return {
+          ...match,
+          participants: participantsRes.data, // Ajoute les participants au match
+          matchDetails: matchDetailsRes.data, // Ajoute les détails du match
+          champion: championRes.data, // Ajoute les informations du champion
+          runes: runeNamesRes.data, // Ajoute les noms des runes
+          items: itemsRes.data, // Ajoute les noms des objets
+          summoner_spells: summonerSpellsRes.data, // Ajoute les noms des summoner spells
+        };
+      })
+    );
+
     // Retourner les données comme props
     return {
       props: {
         summoner,
         stats,
-        matchHistory,
+        matchHistory: matchHistoryWithDetails,
       },
     };
   } catch (error) {
