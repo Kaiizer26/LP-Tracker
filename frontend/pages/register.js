@@ -2,23 +2,59 @@ import '/src/app/globals.css';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: ''
+    username: '', 
+    email: '', 
+    password: '',
+    user_image: null  // Initialiser comme null, car c'est un fichier
   });
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const router = useRouter();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, files } = e.target;
+    if (type === "file") {
+      // Si c'est un champ de type fichier, on prend le fichier sélectionné
+      setFormData({ ...formData, user_image: files[0] });
+    } else {
+      // Sinon, on met à jour les autres champs de texte
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Ajoute ici la logique d'inscription avec une API
-  };
+    setErrorMessage(''); 
+    setSuccessMessage(''); 
+
+    // Créez une instance de FormData pour envoyer le fichier et autres données
+    const formDataToSend = new FormData();
+    formDataToSend.append("username", formData.username);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("password", formData.password);
+    formDataToSend.append("user_image", formData.user_image);  // Ajoutez l'image dans FormData
+
+    try {
+      const response = await axios.post('http://localhost:3000/users/register', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'  // Spécifiez que vous envoyez des fichiers
+        }
+      });
+      if (response.status === 201) {
+        setSuccessMessage('Inscription réussie ! Vous pouvez vous connecter maintenant.');
+        setTimeout(() => {
+          router.push('/login'); 
+        }, 3000);
+      }
+    } catch (error) {
+      setErrorMessage('Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
+    }
+  }
 
   return (
     <div className="text-white min-h-screen flex flex-col justify-center items-center" 
@@ -39,6 +75,13 @@ export default function Register() {
           <h2 className="text-3xl font-bold text-center">Créer un compte</h2>
           <p className="text-gray-400 text-center mt-2">Rejoignez-nous dès maintenant !</p>
           
+          {errorMessage && (
+            <p className="text-red-500 text-center mt-4">{errorMessage}</p>
+          )}
+          {successMessage && (
+            <p className="text-green-500 text-center mt-4">{successMessage}</p>
+          )}
+
           <form className="mt-6" onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-300 mb-1">Nom d'utilisateur</label>
@@ -76,6 +119,17 @@ export default function Register() {
                 className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white outline-none" 
                 placeholder="Entrez votre mot de passe" 
                 required 
+              />
+            </div>
+
+            {/* Sélection d'image de profil */}
+            <div className="mb-4">
+              <label className="block text-gray-300 mb-1">Image de profil</label>
+              <input 
+                type="file" 
+                name="user_image" 
+                onChange={handleChange} 
+                className="w-full px-4 py-2 rounded-lg bg-gray-700 text-white outline-none" 
               />
             </div>
             
