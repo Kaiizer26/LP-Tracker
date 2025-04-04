@@ -60,10 +60,10 @@ export default function Login() {
         <Link href="/" className="text-blue-400 text-sm absolute -top-6 left-0">&lt; Retour à l'accueil</Link>
         <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full">
           <h2 className="text-3xl font-bold text-center">Se connecter</h2>
-          <p className="text-gray-400 text-center mt-2">Bienvenue de retour !</p>
+          <p className="text-gray-400 text-center mt-2">Bienvenue  !</p>
 
-          {errorMessage && <p className="text-red-500 text-center mt-4">{errorMessage}</p>}  {/* Affichage des erreurs */}
-          {successMessage && <p className="text-green-500 text-center mt-4">{successMessage}</p>}  {/* Affichage du succès */}
+          {errorMessage && <p className="text-red-500 text-center mt-4">{errorMessage}</p>}  
+          {successMessage && <p className="text-green-500 text-center mt-4">{successMessage}</p>}  
 
           <form className="mt-6" onSubmit={handleSubmit}>
             <div className="mb-4">
