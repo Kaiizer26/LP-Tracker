@@ -97,47 +97,31 @@ router.post('/register', upload.single('user_image'), async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
-    // Vérifier si email et mot de passe sont présents dans la requête
+    
     if (!email || !password) {
-        console.log("Email ou mot de passe manquant");
-        return res.status(400).json({ error: "Email et mot de passe sont requis." });
+      return res.status(400).json({ error: "Email et mot de passe sont requis." });
     }
-
+  
     try {
-        // Chercher l'utilisateur dans la base de données par email
-        const user = await User.getUserByEmail(email);
-        if (!user) {
-            console.log("Utilisateur non trouvé avec l'email:", email);
-            return res.status(400).json({ error: "Email ou mot de passe incorrect." });
-        }
-
-        // Comparer le mot de passe envoyé avec le mot de passe haché dans la base de données
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            console.log("Mot de passe incorrect pour l'utilisateur:", email);
-            return res.status(400).json({ error: "Email ou mot de passe incorrect." });
-        }
-
-        // Générer un token JWT
-        const token = jwt.sign(
-            { user_id: user.user_id, username: user.username },  // Les informations à inclure dans le token
-            'secretKey',  // Utilisez une clé secrète, de préférence stockée dans les variables d'environnement
-            { expiresIn: '1h' }  // Le token expirera dans une heure
-        );
-
-        // Répondre avec le token et les informations de l'utilisateur
-        res.status(200).json({
-            message: 'Connexion réussie',
-            token,  // Le token JWT pour l'authentification future
-            username: user.username,
-            user_id: user.user_id
-        });
+      // Logique de connexion (vérification de l'email et du mot de passe, génération du token)
+      const user = await User.getUserByEmail(email);
+      if (!user) {
+        return res.status(400).json({ error: "Email ou mot de passe incorrect." });
+      }
+      
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(400).json({ error: "Email ou mot de passe incorrect." });
+      }
+  
+      const token = jwt.sign({ user_id: user.user_id, username: user.username }, 'secretKey', { expiresIn: '1h' });
+  
+      res.status(200).json({ token, username: user.username });
     } catch (error) {
-        console.error("Erreur de connexion:", error);
-        res.status(500).json({ error: "Erreur lors de la connexion." });
+      console.error(error);
+      res.status(500).json({ error: "Erreur lors de la connexion." });
     }
-});
+  });
 
 // Modifier entièrement un utilisateur par ID
 router.put('/:user_id', async (req, res) => {

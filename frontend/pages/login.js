@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');  // Assurez-vous de définir errorMessage ici
   const [successMessage, setSuccessMessage] = useState('');
   const router = useRouter();
 
@@ -33,10 +33,10 @@ export default function Login() {
     } catch (error) {
       // Vérification de la présence d'une erreur spécifique dans la réponse
       if (error.response) {
-        // Si la réponse contient des informations d'erreur, on les affiche
         setErrorMessage(error.response.data.error || 'Erreur inconnue');
+      } else if (error.message) {
+        setErrorMessage('Erreur réseau: ' + error.message);
       } else {
-        // Sinon, message générique d'erreur
         setErrorMessage('Erreur de connexion au serveur. Veuillez réessayer plus tard.');
       }
       console.error('Erreur de connexion:', error);
