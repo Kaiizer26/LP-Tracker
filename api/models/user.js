@@ -15,14 +15,21 @@ class User {
         const result = await pool.query('SELECT * FROM users');
         return result.rows;
     }
+
      static async getUserByUsername(username) {
         const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
         return result.rows[0];
     }
+
      static async getUserById(user_id) {
         const result = await pool.query('SELECT * FROM users WHERE user_id = $1', [user_id]);
         return result.rows[0];
     }
+
+    static async getUserByEmail(email) {
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        return result.rows[0];  // Retourne l'utilisateur si trouvé
+    };
 
     static async createUser({ username, user_image, email, password }) {
         const result = await pool.query(
@@ -31,6 +38,7 @@ class User {
         );
         return result.rows[0];
     }
+
     static async updateUser(user_id, { username, user_image, email, password }) {
         const result = await pool.query(
             `UPDATE users 
@@ -51,6 +59,5 @@ class User {
         return result.rows[0];
     }
 }
-
 
 module.exports = User;

@@ -1,22 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 import "/src/app/globals.css";
 import Head from "next/head";
 
 export default function Home() {
-  // Déclare les états pour la recherche
   const [searchTerm, setSearchTerm] = useState("");
   const [summoners, setSummoners] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(""); // Message d'erreur
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Statut de connexion
 
-  // Gérer le changement de texte dans la barre de recherche
+  // Vérifie si l'utilisateur est connecté en consultant le localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsAuthenticated(true); // L'utilisateur est connecté si un token est présent
+    }
+  }, []);
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Gérer la soumission du formulaire de recherche
   const handleSearchSubmit = async (event) => {
     event.preventDefault(); // Empêche le rechargement de la page
     if (!searchTerm.trim()) return; // Ignore si le champ est vide
@@ -40,6 +46,12 @@ export default function Home() {
     }
   };
 
+  const handleLogout = () => {
+    // Supprime le token du localStorage et met à jour le statut de l'utilisateur
+    localStorage.removeItem("authToken");
+    setIsAuthenticated(false);
+  };
+
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       <Head>
@@ -50,19 +62,32 @@ export default function Home() {
       {/* Navbar */}
       <nav className="flex justify-between items-center p-6 bg-transparent fixed w-full top-0 z-50">
         <Link href="/">
-        <div className="text-2xl font-bold">LP-TRACKER</div>
+          <div className="text-2xl font-bold">LP-TRACKER</div>
         </Link>
         <div>
-          <Link href="/register">
-            <button className="bg-red-500 px-4 py-2 rounded-lg">
-              S'inscrire
+          {isAuthenticated ? (
+            // Si l'utilisateur est authentifié, afficher le bouton Déconnexion
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 px-4 py-2 rounded-lg"
+            >
+              Déconnexion
             </button>
-          </Link>
-          <Link href="/login">
-            <button className="bg-blue-600 px-4 py-2 rounded-lg ml-2">
-              Se connecter
-            </button>
-          </Link>
+          ) : (
+            // Sinon, afficher les boutons S'inscrire et Se connecter
+            <>
+              <Link href="/register">
+                <button className="bg-red-500 px-4 py-2 rounded-lg">
+                  S'inscrire
+                </button>
+              </Link>
+              <Link href="/login">
+                <button className="bg-blue-600 px-4 py-2 rounded-lg ml-2">
+                  Se connecter
+                </button>
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -76,9 +101,7 @@ export default function Home() {
       >
         <div className="relative p-10 rounded-lg text-center w-1/2">
           <h1 className="text-4xl font-bold text-white">LP Tracker</h1>
-          <p className="mt-4 text-white">
-            Trackez la personne que vous voulez !
-          </p>
+          <p className="mt-4 text-white">Trackez la personne que vous voulez !</p>
           <form
             onSubmit={handleSearchSubmit}
             className="w-full max-w-lg mx-auto mt-6"

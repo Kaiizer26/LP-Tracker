@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -16,17 +17,17 @@ const itemparticipantRoutes = require('./routes/itemparticipantRoutes');
 const runeparticipantRoutes = require('./routes/runeparticipantRoutes');
 const summonerspellparticipantRoutes = require('./routes/summonerspellparticipantRoutes');
 const runeRoutes = require('./routes/runeRoutes');
-require('dotenv').config();
 
 const app = express();
 
 // ✅ CORS en premier
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'http://localhost:3001',
   methods: 'GET,POST,PUT,DELETE',
   credentials: true,
 };
 app.use(cors(corsOptions));
+
 
 // ✅ Puis les middlewares
 app.use(express.json());
