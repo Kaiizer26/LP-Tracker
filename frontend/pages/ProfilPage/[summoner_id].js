@@ -223,6 +223,105 @@ const ProfilePage = ({ summoner, stats, matchHistory, error }) => {
                       </p>
                       <p className="text-sm text-gray-400">{match.kda} KDA</p>
                     </div>
+                    
+
+                    {/* ESSAI AFFICHAGE SUPPRIMER */}
+                    <p>{ `${match.items.item1_name.toLowerCase().replace(/ /g, "").replace(/[^a-z0-9_]/g, "")}.png`}</p>
+                    <Image
+                      src={`/img/item/${match.items.item1_name.toLowerCase().replace(/ /g, "").replace(/[^a-z0-9_]/g, "")}.png`}
+                      alt="Item 1"
+                      width={32}
+                      height={32}
+                      className="rounded-sm"
+                    />
+
+
+
+                    {/* Items */}
+                    <div className="flex-grow flex justify-center space-x-2">
+                      {Array.from({ length: 6 }).map((_, idx) => {
+                        const itemName = match.items && match.items[idx] ? match.items[idx] : null;
+                        const formattedItemName = itemName
+                          ? itemName.toLowerCase().replace(/ /g, "_").replace(/[^a-z0-9_]/g, "") // Remplace les espaces par des underscores et supprime les caractères spéciaux
+                          : null;
+                        return formattedItemName ? (
+                          <Image
+                            key={idx}
+                            src={`/img/item/${match.items.item1_name.toLowerCase().replace(/ /g, "").replace(/[^a-z0-9_]/g, "")}.png`}
+                            alt={`Item ${itemName}`}
+                            width={32}
+                            height={32}
+                            className="rounded-sm"
+                          />                          
+                        ) : (
+                          <div
+                            key={idx}
+                            className="w-8 h-8 bg-gray-700 rounded-sm opacity-50"
+                          />
+                          
+                        );
+                        
+                      })}
+                      {/* Trinket */}
+                      {match.items && match.items[6] ? (
+                        <Image
+                          src={`/img/item/${match.items[6]
+                            .toLowerCase()
+                            .replace(/ /g, "_")
+                            .replace(/[^a-z0-9_]/g, "")}.png`}
+                          alt="Trinket"
+                          width={32}
+                          height={32}
+                          className="rounded-sm"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 bg-gray-700 rounded-sm opacity-50" />
+                      )}
+                    </div>
+
+                    {/* Participants */}
+                    <div className="ml-4 grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        {match.participants
+                          .filter((p) => p.team_side === match.team_side)
+                          .map((participant, idx) => (
+                            <div key={idx} className="flex items-center space-x-2">
+                              <Image
+                                src={`/img/champion/${removeSpaces(
+                                  participant.champion_name.toLowerCase()
+                                )}.png`}
+                                alt={`${participant.champion_name} Icon`}
+                                width={18}
+                                height={18}
+                                className="rounded-full"
+                              />
+                              <p className="text-gray-300 truncate">
+                                {participant.summoner_name}
+                              </p>
+                            </div>
+                          ))}
+                      </div>
+                      <div>
+                        {match.participants
+                          .filter((p) => p.team_side !== match.team_side)
+                          .map((participant, idx) => (
+                            <div key={idx} className="flex items-center space-x-2">
+                              <Image
+                                src={`/img/champion/${removeSpaces(
+                                  participant.champion_name.toLowerCase()
+                                )}.png`}
+                                alt={`${participant.champion_name} Icon`}
+                                width={18}
+                                height={18}
+                                className="rounded-full"
+                              />
+                              <p className="text-gray-300 truncate">
+                                {participant.summoner_name}
+                              </p>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
                   </div>
                 ))
               ) : (
