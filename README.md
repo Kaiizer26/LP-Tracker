@@ -2,16 +2,6 @@
 
 **LP-TRACKER** est une plateforme de suivi des performances des joueurs de **League of Legends**. Elle permet aux utilisateurs de consulter leurs statistiques, leur historique de matchs, et d'obtenir des informations détaillées sur leurs performances par champion. Ce projet est conçu pour aider les joueurs à mieux comprendre leurs points forts et leurs axes d'amélioration afin de progresser dans le jeu.
 
-## Table des matières
-
-1. [Prérequis]
-2. [Installation]
-3. [Démarrer l'application]
-4. [Endpoints API]
-5. [Structure du projet]
-6. [Contribuer]
-7. [Crédits]
-
 ---
 
 ## Prérequis
