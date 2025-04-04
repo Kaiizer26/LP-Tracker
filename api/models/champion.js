@@ -11,14 +11,14 @@ const pool = new Pool({
 class Champion {
   // Obtenir la liste complète des champions disponibles dans le jeu
   static async getAllChampions() {
-    const result = await pool.query(`SELECT * FROM Champion`);
+    const result = await pool.query(`SELECT * FROM champions`);
     return result.rows;
   }
 
   static async getChampionById(champion_id) {
     const result = await pool.query(
       `SELECT *
-             FROM Champion
+             FROM champions
              WHERE champion_id = $1`,
       [champion_id]
     );
@@ -29,7 +29,7 @@ class Champion {
   static async getChampionByParticipantId(participant_id) {
     const result = await pool.query(
       `SELECT c.*
-         FROM Champion c
+         FROM champions c
          JOIN match_participants mp ON c.champion_id = mp.champion_id
          WHERE mp.participant_id = $1`,
       [participant_id]
@@ -39,7 +39,7 @@ class Champion {
   static async getChampionByChampionName(champion_name) {
     const result = await pool.query(
       `SELECT *
-             FROM Champion
+             FROM champions
              WHERE champion_name = $1`,
       [champion_name]
     );
@@ -49,7 +49,7 @@ class Champion {
   static async getChampionsBySummoner(region, summonerName) {
     const result = await pool.query(
       `SELECT DISTINCT c.*
-             FROM Champion c
+             FROM champions c
              JOIN Matches m ON c.champion_id = m.champion_id
              JOIN Summoners s ON m.summoner_id = s.summoner_id
              WHERE s.region = $1 AND s.summoner_name = $2`,
@@ -66,7 +66,7 @@ class Champion {
                     AVG(m.kills) AS avg_kills,
                     AVG(m.deaths) AS avg_deaths,
                     AVG(m.assists) AS avg_assists
-             FROM Champion c
+             FROM champions c
              JOIN Matches m ON c.champion_id = m.champion_id
              JOIN Summoners s ON m.summoner_id = s.summoner_id
              WHERE s.region = $1 AND s.summoner_name = $2 AND c.champion_id = $3
@@ -81,7 +81,7 @@ class Champion {
     const result = await pool.query(
       `SELECT c.champion_name, 
                     AVG(m.kills + m.assists) / NULLIF(AVG(m.deaths), 0) AS kda
-             FROM Champion c
+             FROM champions c
              JOIN Matches m ON c.champion_id = m.champion_id
              JOIN Summoners s ON m.summoner_id = s.summoner_id
              WHERE s.region = $1 AND s.summoner_name = $2
@@ -97,7 +97,7 @@ class Champion {
       `SELECT c.champion_name, 
                     COUNT(*) AS games_played,
                     SUM(CASE WHEN m.win = TRUE THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS winrate
-             FROM Champion c
+             FROM champions c
              JOIN Matches m ON c.champion_id = m.champion_id
              JOIN Summoners s ON m.summoner_id = s.summoner_id
              WHERE s.region = $1 AND s.summoner_name = $2
@@ -111,7 +111,7 @@ class Champion {
   static async getChampionCS(region, summonerName) {
     const result = await pool.query(
       `SELECT c.champion_name, AVG(m.cs) AS avg_cs
-             FROM Champion c
+             FROM champions c
              JOIN Matches m ON c.champion_id = m.champion_id
              JOIN Summoners s ON m.summoner_id = s.summoner_id
              WHERE s.region = $1 AND s.summoner_name = $2
@@ -125,7 +125,7 @@ class Champion {
   static async getChampionDamage(region, summonerName) {
     const result = await pool.query(
       `SELECT c.champion_name, AVG(m.damage_dealt) AS avg_damage
-             FROM Champion c
+             FROM champions c
              JOIN Matches m ON c.champion_id = m.champion_id
              JOIN Summoners s ON m.summoner_id = s.summoner_id
              WHERE s.region = $1 AND s.summoner_name = $2
@@ -139,7 +139,7 @@ class Champion {
   static async getChampionGold(region, summonerName) {
     const result = await pool.query(
       `SELECT c.champion_name, AVG(m.gold_earned) AS avg_gold
-             FROM Champion c
+             FROM champions c
              JOIN Matches m ON c.champion_id = m.champion_id
              JOIN Summoners s ON m.summoner_id = s.summoner_id
              WHERE s.region = $1 AND s.summoner_name = $2
@@ -150,11 +150,11 @@ class Champion {
   }
 
   // Création d'un champion
-  static async createChampion({ champion_name, lore, champion_image }) {
+  static async createChampion({ champion_name, role, lore }) {
     const result = await pool.query(
-      `INSERT INTO Champion (champion_name, champion_image, lore) 
+      `INSERT INTO champions (champion_name, role, lore) 
              VALUES ($1, $2, $3) RETURNING *`,
-      [champion_name, champion_image, lore]
+      [champion_name, role, lore]
     );
     return result.rows[0];
   }
@@ -162,14 +162,14 @@ class Champion {
   // Mise à jour d'un champion
   static async updateChampion(
     champion_id,
-    { champion_name, champion_image, lore }
+    { champion_name, role, lore }
   ) {
     const result = await pool.query(
-      `UPDATE Champion 
-             SET champion_name = $1, champion_image = $2, lore = $3 updated_at = CURRENT_TIMESTAMP
+      `UPDATE champions 
+             SET champion_name = $1, role = $2, lore = $3 updated_at = CURRENT_TIMESTAMP
              WHERE champion_id = $4
              RETURNING *`,
-      [champion_name, champion_image, lore, champion_id]
+      [champion_name, role, lore, champion_id]
     );
     return result.rows[0];
   }
@@ -177,7 +177,7 @@ class Champion {
   // Suppression d'un champion
   static async deleteChampion(champion_id) {
     const result = await pool.query(
-      `DELETE FROM Champion WHERE champion_id = $1 RETURNING *`,
+      `DELETE FROM champions WHERE champion_id = $1 RETURNING *`,
       [champion_id]
     );
     return result.rows[0];
